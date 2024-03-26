@@ -1,0 +1,8 @@
+/node_modules/**
+/dist/*
+/public/*
+/src/utils/encrypt/*
+.husky
+.github
+.vscode
+.idea

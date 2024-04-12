@@ -58,7 +58,7 @@
     "@vitejs/plugin-vue": "^4.4.0",
     "@vue/compiler-sfc": "^3.3.4",
     "@zclzone/eslint-config": "^0.0.5",
-    "autofit.js": "^3.0.7",
+    "autofit.js": "^3.1.0",
     "chalk": "^5.3.0",
     "commitizen": "^4.3.0",
     "cz-conventional-changelog": "^3.3.0",

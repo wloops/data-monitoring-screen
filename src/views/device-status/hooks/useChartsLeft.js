@@ -1,6 +1,8 @@
 import * as echarts from 'echarts'
 import api from '@/api'
-import { as, da, de } from '~/config-agile-exec/assets/installCanvasRenderer-57e2e58a'
+import { useMonitorStore } from '@/store'
+
+const store = useMonitorStore()
 
 export const useChartsLeft = () => {
   return {
@@ -22,21 +24,21 @@ export const useChartsLeft = () => {
 
 const deviceMessage = ref({})
 async function getData1(wsMsg) {
-  const deviceInfo = {
+  let deviceInfo = {
     name: '数字签名系统',
     unit: '北京信安世纪科技股份有限公司',
     id: '80,139,44',
     ip: '192.168.1.0.1',
     version: 'v1.0',
   }
-  const deviceStatus = {
+  let deviceStatus = {
     host: {
       desc: '主机状态',
       status: '正常',
     },
     spare: {
       desc: '备机状态',
-      status: '正常',
+      status: '异常',
     },
     run: {
       desc: '运行状态',
@@ -47,21 +49,28 @@ async function getData1(wsMsg) {
       status: '过期',
     },
   }
-
+  if (wsMsg) {
+    deviceInfo = wsMsg.deviceInfo
+    deviceStatus = wsMsg.deviceStatus
+    store.SET_DS_LEFT_DATA_01([{ deviceInfo, deviceStatus }])
+  }else if (store.DS_LEFT_DATA_01.length > 0) {
+    deviceInfo = store.DS_LEFT_DATA_01[0].deviceInfo
+    deviceStatus = store.DS_LEFT_DATA_01[0].deviceStatus
+  }
   return {
-    deviceInfo: deviceInfo,
-    deviceStatus: deviceStatus,
+    deviceInfo,
+    deviceStatus,
   }
 }
 async function init1(wsMsg) {
-  const { deviceInfo, deviceStatus } = wsMsg ? wsMsg : await getData1(wsMsg)
+  const { deviceInfo, deviceStatus } = await getData1(wsMsg)
   deviceMessage.value = {
     deviceInfo,
     deviceStatus,
   }
 }
-async function getData2(wsMsg) {
-  const data = [
+function getData2(wsMsg) {
+  let data = [
     {
       name: 'CPU使用率',
       value: 45,
@@ -75,12 +84,18 @@ async function getData2(wsMsg) {
       value: 80,
     },
   ]
+  if (wsMsg) {
+    data = wsMsg
+    store.SET_DS_LEFT_DATA_02(data)
+  }else if (store.DS_LEFT_DATA_02.length > 0) {
+    data = store.DS_LEFT_DATA_02
+  }
 
   return data
 }
 async function init2(wsMsg, dom) {
-  const data = wsMsg ? wsMsg : await getData2(wsMsg)
-
+  const data = getData2(wsMsg)
+  console.log('设备硬件状态', data, wsMsg)
   // 1. 实例化对象
   let myChart = echarts.init(dom)
   // 2.指定配置
@@ -152,11 +167,11 @@ async function init2(wsMsg, dom) {
             },
             axisLabel: {
               distance: -20,
-              textStyle: {
+              // textStyle: {
                 color: 'inherit',
                 fontSize: '12',
                 fontWeight: 'bold',
-              },
+              // },
             },
             pointer: {
               show: 0,
@@ -204,12 +219,12 @@ async function init2(wsMsg, dom) {
               show: 0,
             },
             detail: {
-              show: true,
-              offsetCenter: [0, '45%'],
-              textStyle: {
+              // textStyle: {
                 fontSize: 16,
                 color: 'inherit',
-              },
+              // },
+              show: true,
+              offsetCenter: [0, '45%'],
               formatter: ['{value} ' + (item.unit || ''), '{name|' + item.name + '}'].join('\n'),
               rich: {
                 name: {
@@ -220,9 +235,9 @@ async function init2(wsMsg, dom) {
               },
             },
             itemStyle: {
-              normal: {
+              // normal: {
                 color: highlight,
-              },
+              // },
             },
             data: [
               {
@@ -247,14 +262,22 @@ async function init2(wsMsg, dom) {
 
 // 2
 async function getData301(wsMsg) {
-  const label = ['07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00']
-  const value = ['233', 233, 200, 180, 199, 233, 210, 180]
+  let label = ['07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00']
+  let value = ['233', 233, 200, 180, 199, 233, 210, 180]
+  if (wsMsg) {
+    label = wsMsg.label
+    value = wsMsg.value
+    store.SET_DS_LEFT_DATA_03_1({ label, value })
+  }else if (store.DS_LEFT_DATA_03_1.length > 0) {
+    label = store.DS_LEFT_DATA_03_1[0].label
+    value = store.DS_LEFT_DATA_03_1[0].value
+  }
   return { label, value }
 }
 async function init301(wsMsg, dom) {
   var myChart = echarts.init(dom)
   var option
-  const { label, value } = wsMsg ? wsMsg : await getData301(wsMsg)
+  const { label, value } = await getData301(wsMsg)
 
   /**
    *
@@ -309,9 +332,9 @@ async function init301(wsMsg, dom) {
           formatter: '{value}',
           fontSize: 14,
           margin: 20,
-          textStyle: {
+          // textStyle: {
             color: '#7ec7ff',
-          },
+          // },
         },
         axisLine: {
           lineStyle: {
@@ -321,7 +344,7 @@ async function init301(wsMsg, dom) {
         splitLine: {
           show: false,
           lineStyle: {
-            color: '#243753',
+            color: '#22222',
           },
         },
         axisTick: {
@@ -335,9 +358,9 @@ async function init301(wsMsg, dom) {
         boundaryGap: false,
         type: 'value',
         axisLabel: {
-          textStyle: {
+          // textStyle: {
             color: '#7ec7ff',
-          },
+          // },
         },
         nameTextStyle: {
           color: '#fff',
@@ -374,13 +397,13 @@ async function init301(wsMsg, dom) {
           borderColor: '#a3c8d8',
         },
         lineStyle: {
-          normal: {
+          // normal: {
             width: 3,
             color: '#19a3df',
-          },
+          // },
         },
         areaStyle: {
-          normal: {
+          // normal: {
             color: new echarts.graphic.LinearGradient(
               0,
               0,
@@ -398,7 +421,7 @@ async function init301(wsMsg, dom) {
               ],
               false
             ),
-          },
+          // },
         },
         data: value,
       },
@@ -413,9 +436,16 @@ async function init301(wsMsg, dom) {
 }
 // 2 02
 async function getData302(wsMsg) {
-  const data = [70, 60, 50, 80, 30, 68, 40, 30]
-  const xdata = ['07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00']
-
+  let data = [70, 60, 50, 80, 30, 68, 40, 30]
+  let xdata = ['07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00']
+  if (wsMsg) {
+    data = wsMsg.data
+    xdata = wsMsg.xdata
+    store.SET_DS_LEFT_DATA_03_2({ data, xdata })
+  }else if (store.DS_LEFT_DATA_03_2.length > 0) {
+    data = store.DS_LEFT_DATA_03_2[0].data
+    xdata = store.DS_LEFT_DATA_03_2[0].xdata
+  }
   return {
     data,
     xdata,
@@ -424,7 +454,7 @@ async function getData302(wsMsg) {
 async function init302(wsMsg, dom) {
   var myChart = echarts.init(dom)
   var option
-  const { data, xdata } = wsMsg ? wsMsg : await getData302(wsMsg)
+  const { data, xdata } = await getData302(wsMsg)
 
   /*
     最近本人发现了配置更简单，更容易理解，更容易修改，bug更少的写法
@@ -515,7 +545,7 @@ async function init302(wsMsg, dom) {
       textStyle: {
         color: '#fff',
       },
-      data: ['及格', '未及格'],
+      data: ['', '未及格'],
     },
     tooltip: {
       trigger: 'axis',
@@ -565,9 +595,9 @@ async function init302(wsMsg, dom) {
         },
         axisLabel: {
           interval: 0,
-          textStyle: {
+          // textStyle: {
             color: '#7AC1FA',
-          },
+          // },
           // 默认x轴字体大小
           fontSize: 12,
           // margin:文字到x轴的距离
@@ -576,7 +606,7 @@ async function init302(wsMsg, dom) {
         axisPointer: {
           label: {
             // padding: [11, 5, 7],
-            padding: [0, 0, 10, 0],
+            padding: [5, 5, 5, 5],
             /*
                     除了padding[0]建议必须是0之外，其他三项可随意设置
 
@@ -656,9 +686,9 @@ async function init302(wsMsg, dom) {
           },
         },
         axisLabel: {
-          textStyle: {
+          // textStyle: {
             color: '#7AC1FA',
-          },
+          // },
         },
         splitLine: {
           show: false,
@@ -709,10 +739,10 @@ async function init302(wsMsg, dom) {
           // shadowOffsetY: 20,
         },
         itemStyle: {
-          normal: {
+          // normal: {
             color: colorList[0],
             borderColor: colorList[0],
-          },
+          // },
         },
         // markPoint: {
         //     symbol: 'pin', //标记(气泡)的图形
@@ -756,10 +786,10 @@ async function init302(wsMsg, dom) {
           width: 0,
         },
         itemStyle: {
-          normal: {
+          // normal: {
             color: colorList[1],
             borderColor: colorList[1],
-          },
+          // },
         },
       },
     ],

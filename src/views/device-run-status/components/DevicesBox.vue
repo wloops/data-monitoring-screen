@@ -3,7 +3,7 @@ import { useThemeVars } from 'naive-ui'
 const props = defineProps({
   data: {
     type: Object,
-    default: () => {},
+    default: () => { },
   },
 })
 import { useChartsLeft } from '../hooks'
@@ -41,11 +41,7 @@ const progressColor = (percent) => {
 <template>
   <div w-full h-full>
     <div class="derviceBox1">
-      <div
-        class="chart"
-        style="width: 50%; height: 100%; margin-right: 10%"
-        ref="derviceChart"
-      ></div>
+      <div class="chart" style="width: 50%; height: 100%; margin-right: 10%" ref="derviceChart"></div>
       <div class="dervice-info-box">
         <div class="dervice-info-title">{{ data.name }}</div>
         <div class="dervice-info-content">
@@ -64,37 +60,22 @@ const progressColor = (percent) => {
           <div class="dervice-info-item">
             <div class="dervice-info-item-title">CPU利用率：</div>
             <div class="dervice-info-item-content">
-              <n-progress
-                type="line"
-                :color="progressColor(data.cpuUsage)"
-                :rail-color="themeVars.primaryColor"
-                :percentage="data.cpuUsage"
-                indicator-text-color="#ffffffc7"
-              />
+              <n-progress type="line" :color="progressColor(data.cpuUsage)" :rail-color="themeVars.primaryColor"
+                :percentage="data.cpuUsage" indicator-text-color="#ffffffc7" processing />
             </div>
           </div>
           <div class="dervice-info-item">
             <div class="dervice-info-item-title">内存利用率：</div>
             <div class="dervice-info-item-content">
-              <n-progress
-                type="line"
-                :color="progressColor(data.memoryUsage)"
-                :rail-color="themeVars.primaryColor"
-                :percentage="data.memoryUsage"
-                indicator-text-color="#ffffffc7"
-              />
+              <n-progress type="line" :color="progressColor(data.memoryUsage)" :rail-color="themeVars.primaryColor"
+                :percentage="data.memoryUsage" indicator-text-color="#ffffffc7" processing />
             </div>
           </div>
           <div class="dervice-info-item">
             <div class="dervice-info-item-title">网络负载：&nbsp;&nbsp;&nbsp;</div>
             <div class="dervice-info-item-content">
-              <n-progress
-                type="line"
-                :color="progressColor(data.networkUsage)"
-                :rail-color="themeVars.primaryColor"
-                :percentage="data.networkUsage"
-                indicator-text-color="#ffffffc7"
-              />
+              <n-progress type="line" :color="progressColor(data.networkUsage)" :rail-color="themeVars.primaryColor"
+                :percentage="data.networkUsage" indicator-text-color="#ffffffc7" processing />
             </div>
           </div>
         </div>
@@ -109,12 +90,14 @@ const progressColor = (percent) => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+
   .chart {
     /* flex: 1; */
     width: 50%;
     height: 100%;
     margin-right: 10%;
   }
+
   .dervice-info-box {
     /* flex: 1; */
     width: 50%;
@@ -144,6 +127,7 @@ const progressColor = (percent) => {
       flex-direction: column;
       font-size: 10px;
       margin-top: 10px;
+
       .dervice-info-item {
         flex: 1;
         width: 100%;
@@ -151,6 +135,7 @@ const progressColor = (percent) => {
         justify-content: space-between;
         align-items: center;
         margin-top: 10px;
+
         .dervice-info-item-title {
           font-size: 12px;
           font-weight: 500;
@@ -158,6 +143,7 @@ const progressColor = (percent) => {
           margin-right: 10px;
           text-align: left;
         }
+
         .dervice-info-item-content {
           flex: 2;
           font-size: 12px;

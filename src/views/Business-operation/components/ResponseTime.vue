@@ -5,7 +5,19 @@ const props = defineProps({
     default: () => [],
   },
 })
+onMounted(() => {
+  // 计算tb-body高度
+  const parentElement = document.querySelector('.appResponseTime')
+  const scrollBox = document.querySelector('.responseTimeAll')
+  if (parentElement) {
+    const width = parentElement.offsetWidth - 50
+    const height = parentElement.offsetHeight - 100
+    console.log('width:', width, 'height:', height)
+    scrollBox.style.width = width + 'px'
+    scrollBox.style.height = height + 'px'
+  }
 
+})
 console.log('props', props.data)
 </script>
 
@@ -26,7 +38,7 @@ console.log('props', props.data)
         <div v-for="item in data">
           <div :class="['responseTimeBox', item.status === '1' ? 'responseTimeBox2' : '']">
             <span class="picon" v-if="item.status !== '1'"></span>
-            <p style="font-size: 12px; margin-bottom: 5px">{{ item.appName }}</p>
+            <p style="font-size: 12px; margin-bottom: 0px">{{ item.appName }}</p>
             <p>
               <span class="responseTimeNum">{{ item.time }}</span>
               <span class="responseTimeMs">ms</span>
@@ -42,46 +54,54 @@ console.log('props', props.data)
 <style scoped>
 .responseTime {
   width: 100%;
-  /* height: 100%; */
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   padding-top: 1rem;
+  overflow: hidden;
 }
+
 .responseTimeTitle {
-  width: 90%;
+  /* width: 100%; */
   height: 20px;
   display: flex;
-  justify-content: end;
+  justify-content: center;
   align-items: center;
   /* margin-top: 10px; */
-  margin-right: 30px;
+  /* margin-right: 30px; */
   color: white;
   font-size: 12px;
 }
+
 .responseTimeTitle .end {
   display: inline-block;
   width: 10px;
   height: 10px;
   background-color: #007197;
 }
+
 .responseTimeTitle .not {
   display: inline-block;
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   background-color: #012054;
   border: 1px solid #0063bd;
 }
+
 .responseTimeAll {
-  width: 90%;
+  width: 100%;
+  height: 100%;
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   flex-wrap: wrap;
   justify-items: center;
-  margin-top: 10px;
+  margin-top: 30px;
   /* margin-right: 10px; */
+  overflow: hidden;
 }
+
 .responseTimeBox {
   width: 88px;
   height: 50px;
@@ -96,10 +116,12 @@ console.log('props', props.data)
   position: relative;
   margin: 5px;
 }
+
 .responseTimeBox2 {
   background-color: #007197;
   border: 1px solid #007197;
 }
+
 .responseTimeBox .picon {
   display: inline-block;
   width: 0;
@@ -111,11 +133,13 @@ console.log('props', props.data)
   left: 0;
   border-top-left-radius: 3px;
 }
+
 .responseTimeBox .responseTimeNum {
   font-size: 16px;
   font-weight: 700;
   padding-right: 5px;
 }
+
 .responseTimeBox .responseTimeMs {
   font-size: 10px;
   padding: 0 2px;

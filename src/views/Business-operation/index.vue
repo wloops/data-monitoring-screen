@@ -3,9 +3,19 @@ import LoadTop from '@/components/monitoring/LoadTop.vue'
 import ResponseTime from './components/ResponseTime.vue'
 import { useChartsLeft, useMainData, useChartsRight } from './hooks'
 import { useWebSocket } from '@/hooks'
+import { useSetUpdatedDom } from '@/hooks/useSetUpdatedDom'
 const { leftChart } = useChartsLeft()
 const { centerChart, deviceCount } = useMainData()
 const { rightChart } = useChartsRight()
+
+const props = defineProps({
+  parentData: {
+    type: Object,
+    default: () => ({}),
+  },
+})
+
+// const updatedModelKeys = ref([])
 
 const chartLeft1 = ref(null)
 const initChartLeft1 = (msg) => {
@@ -13,8 +23,8 @@ const initChartLeft1 = (msg) => {
 }
 
 const leftData2 = ref([])
-const initLeft2 = async () => {
-  leftData2.value = await leftChart.getData2()
+const initChartLeft2 = async (msg) => {
+  leftData2.value = await leftChart.init2(msg)
 }
 
 const chartLeft3 = ref(null)
@@ -41,12 +51,14 @@ watch(deviceCount, (newVal) => {
   }
 })
 
-const initcenterChart1 = async (msg) => {
-  await centerChart.init1(msg)
+const initCenterChart1 = (msg) => {
+  console.log('initCenterChart1', msg)
+  centerChart.init1(msg)
 }
 
 const chartCenter201 = ref(null)
 const initChartCenter201 = (msg) => {
+  console.log('initChartCenter201', msg)
   centerChart.init201(msg, chartCenter201.value)
 }
 
@@ -61,6 +73,7 @@ const tableConfig = {
   width: '100%',
   height: '80%',
   isRoll: false,
+  'wrap-class': '.BOtableWrap',
 }
 const initChartCenter3 = (msg) => {
   countData.value = centerChart.init3(msg)
@@ -85,22 +98,44 @@ const initChartRight3 = (msg) => {
 
 // 页面加载完成后初始化
 onMounted(async () => {
-  initChartLeft1()
-  initChartLeft3()
-  await initLeft2()
-  initcenterChart1()
-  initChartCenter201()
-  initChartCenter202()
-  initChartCenter3()
-  initChartRight1()
-  initChartRight2()
-  initChartRight3()
+  // 父界面已更新的模块不再重复更新
+  // const updatedKeys = updatedModelKeys.value
+  // for (const key in parentSendCorrespondFunction) {
+  //   if (Object.hasOwnProperty.call(parentSendCorrespondFunction, key)) {
+  //     const fn = parentSendCorrespondFunction[key]
+  //     if (!updatedKeys.includes(key)) {
+  //       fn()
+  //     }
+  //   }
+  // }
+  // initChartLeft1()
+  // initChartLeft3()
+  // await initChartLeft2()
+  // initCenterChart1()
+  // initChartCenter201()
+  // initChartCenter202()
+  // initChartCenter3()
+  // initChartRight1()
+  // initChartRight2()
+  // initChartRight3()
 })
 
 // 消息类型与对应处理函数
 const typeCorrespondFunction = {
-  'today-trade-stats': initcenterChart1,
-  'today-trade-tops': initLeft2,
+  'today-trade-stats': initCenterChart1,
+  'today-trade-tops': initChartLeft2,
+}
+const setDoms = {
+  BO_MIDDLE_01: initCenterChart1,
+  BO_MIDDLE_02_1: initChartCenter201,
+  BO_MIDDLE_02_2: initChartCenter202,
+  BO_MIDDLE_03: initChartCenter3,
+  BO_RIGHT_01: initChartRight1,
+  BO_RIGHT_02: initChartRight2,
+  BO_RIGHT_03: initChartRight3,
+  BO_LEFT_01: initChartLeft1,
+  BO_LEFT_02: initChartLeft2,
+  BO_LEFT_03: initChartLeft3,
 }
 const wsSendData = {
   unionId: 'today-trade-stats',
@@ -113,16 +148,60 @@ useWebSocket(handleMessage, wsSendData2)
 function handleMessage(e) {
   const message = JSON.parse(e.data)
   console.log('websocket接收到消息', message)
-  const type = message.unionId
+  const key = message.unionId
   // const message = useFilterMessage(_msgData.msg)
   // $message.success('websocket接收到消息')
-  // 执行更新
-  typeCorrespondFunction[type](message)
+  pushUpdateMessage(message, key, 'ws')
 }
+const pushUpdateMessage = (msg, key, type) => {
+  const useKey = key
+  // 执行更新
+  if (type === 'ws') {
+    typeCorrespondFunction[useKey](msg)
+  } else {
+    console.log('setDoms[useKey]', setDoms[useKey])
+    setDoms[useKey](msg)
+  }
+}
+
+console.log('props parentData:', props.parentData)
+
+watch(
+  () => ({ ...props.parentData }),
+  (newValue, oldValue) => {
+    if (newValue) {
+      console.log('parentData**newValue', newValue)
+      // 判断newValue 是否为空
+      if (Object.keys(newValue).length === 0) {
+        nextTick(() => {
+          useSetUpdatedDom(newValue, setDoms, 'not')
+        })
+        return
+      }
+      // updatedModelKeys.value = needUpdateDomKeys(newValue)
+      useSetUpdatedDom(newValue, setDoms, 'parent')
+
+      // newValue.upDate.forEach((item) => {
+      //   const moduleId = item.moduleId
+      //   updatedModelKeys.value.push(moduleId)
+      //   const msg = item.dataVolumeLimit === 1 || item.data.length === 1 ? item.data[0] : item.data
+      //   console.log('parentData', moduleId, msg)
+      //   if (moduleId && msg) {
+      //     nextTick(() => {
+      //       pushUpdateMessage(msg, moduleId, 'parentData')
+      //     })
+      //   }
+      // })
+    }
+  },
+  {
+    immediate: true,
+  }
+)
 </script>
 
 <template>
-  <div>
+  <div style="max-width: 100%; ">
     <div class="cardBox">
       <div class="column">
         <div class="card" data-text="实时总交易趋势">
@@ -139,44 +218,24 @@ function handleMessage(e) {
         <div style="flex: 1" class="card card-center card-notbg" data-text="今日交易笔数" pt-10>
           <div class="countBox">
             <n-statistic label="" tabular-nums>
-              <n-number-animation
-                ref="numAnimRefCount"
-                :from="0.0"
-                :to="deviceCountNum.total"
-                :active="false"
-                :precision="0"
-                locale="en-US"
-                show-separator
-              />
+              <n-number-animation ref="numAnimRefCount" :from="0.0" :to="deviceCountNum.total" :active="false"
+                :precision="0" locale="en-US" show-separator />
               <template #suffix>次</template>
             </n-statistic>
           </div>
           <div class="areBox">
-            <div class="onlineBox card onoff" data-text="交易成功">
+            <div class="onlineBox card-min onoff" data-text="交易成功">
               <n-statistic label="" tabular-nums>
-                <n-number-animation
-                  ref="numAnimRefOnline"
-                  :from="0.0"
-                  :to="deviceCountNum.total - deviceCountNum.offline"
-                  :active="false"
-                  :precision="0"
-                  locale="en-US"
-                  show-separator
-                />
+                <n-number-animation ref="numAnimRefOnline" :from="0.0"
+                  :to="deviceCountNum.total - deviceCountNum.offline" :active="false" :precision="0" locale="en-US"
+                  show-separator />
                 <template #suffix>次</template>
               </n-statistic>
             </div>
-            <div class="offlineBox card onoff" data-text="交易失败">
+            <div class="offlineBox card-min onoff" data-text="交易失败">
               <n-statistic label="" tabular-nums>
-                <n-number-animation
-                  ref="numAnimRefOffline"
-                  :from="0.0"
-                  :to="deviceCountNum.offline"
-                  :active="false"
-                  :precision="0"
-                  locale="en-US"
-                  show-separator
-                />
+                <n-number-animation ref="numAnimRefOffline" :from="0.0" :to="deviceCountNum.offline" :active="false"
+                  :precision="0" locale="en-US" show-separator />
                 <template #suffix>次</template>
               </n-statistic>
             </div>
@@ -191,13 +250,9 @@ function handleMessage(e) {
           </div>
         </div>
         <div style="flex: 1" class="card card-center" data-text="业务错误信息">
-          <div class="chart" pl-20 pr20 pb20 v-if="countData.data && countData.data.length > 0">
-            <app-table
-              ref="centerChart3"
-              :tb-data="countData.data"
-              :tb-header="countData.header"
-              :table-config="tableConfig"
-            ></app-table>
+          <div class="chart BOtableWrap" pb20 v-if="countData.data && countData.data.length > 0">
+            <app-table ref="centerChart3" :tb-data="countData.data" :tb-header="countData.header"
+              :table-config="tableConfig"></app-table>
           </div>
         </div>
       </div>
@@ -209,7 +264,7 @@ function handleMessage(e) {
           <div class="chart" ref="chartRight2"></div>
         </div>
         <div class="card" data-text="业务平均响应时间">
-          <div class="chart" ref="chartRight3" v-if="appResponseTime.length > 0">
+          <div class="chart appResponseTime" ref="chartRight3" v-if="appResponseTime.length > 0">
             <ResponseTime :data="appResponseTime"></ResponseTime>
           </div>
         </div>
@@ -221,12 +276,17 @@ function handleMessage(e) {
 <style scoped>
 .cardBox {
   display: flex;
+  margin: 10px 20px;
+  height: 85vh;
 }
+
 .column {
   flex: 2;
-  height: 90vh;
+  height: 100vh;
+  margin-top: 10px;
   /* border: 5px double #00357a; */
   display: flex;
+  justify-content: center;
   flex-direction: column;
 
   .card {
@@ -235,6 +295,16 @@ function handleMessage(e) {
     margin: 10px;
     flex: 1;
     position: relative;
+    min-height: 285px;
+  }
+
+  .card-min {
+    border: 5px double rgba(64, 121, 226, 0.35);
+    border-radius: 18px;
+    margin: 10px;
+    flex: 1;
+    position: relative;
+    min-height: 120px;
   }
 
   .chart {
@@ -242,11 +312,14 @@ function handleMessage(e) {
     height: 100%;
   }
 }
+
 .column-center {
   flex: 3;
+
   .card-center {
     flex: 1;
   }
+
   .card:nth-child(1) {
     border: 0px double rgba(64, 121, 226, 0.26);
     display: flex;
@@ -256,7 +329,7 @@ function handleMessage(e) {
     text-shadow: -1px 8px 16px rgba(47, 131, 209, 0.55);
 
     .countBox {
-      flex: 3;
+      flex: 1;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -269,17 +342,19 @@ function handleMessage(e) {
       /* padding: 0 30px; */
       box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
     }
+
     .areBox {
-      width: 102%;
-      height: 100%;
-      flex: 2;
+      width: 100%;
+      /* height: 100%; */
+      flex: 1;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
+
     .onlineBox,
     .offlineBox {
-      height: 100%;
+      height: 50%;
       border: 5px double rgba(64, 121, 226, 0.35);
       border-radius: 18px;
       /* margin: 10px; */
@@ -291,24 +366,30 @@ function handleMessage(e) {
       padding-top: 25px;
     }
   }
+
   .card:nth-child(2) {
     border: 0px double rgba(64, 121, 226, 0.26);
     color: #c7c9d3;
   }
+
   .card-double-border {
     border: 5px double rgba(64, 121, 226, 0.35) !important;
     margin: 0;
   }
+
   .card-notbg::before {
     background: transparent;
     font-size: 18px;
     font-weight: 600;
   }
 }
+
 .column:nth-child(3) {
   flex: 2;
 }
-.card::before {
+
+.card::before,
+.card-min::before {
   content: attr(data-text);
   position: absolute;
   top: 0px;
@@ -329,42 +410,50 @@ function handleMessage(e) {
   /* font-family: 'electronicFont'; */
   text-shadow: -1px 8px 16px rgba(47, 131, 209, 0.55);
 }
+
 .trade-left {
   border-radius: 18px;
   margin-right: 20px !important;
 }
+
 .trade-right {
   border-radius: 18px;
   margin-right: 20px !important;
 }
+
 .trade-right::before {
   width: 80%;
   left: 10%;
 }
 
-::v-deep .n-statistic .n-statistic__label {
+:deep(.n-statistic .n-statistic__label) {
   text-align: end;
   color: #b1b2bb;
   font-size: 12px;
 }
-::v-deep .n-statistic .n-statistic-value {
+
+:deep(.n-statistic .n-statistic-value) {
   text-align: end;
 }
-::v-deep .n-statistic .n-statistic-value__content {
+
+:deep(.n-statistic .n-statistic-value__content) {
   color: #5486f3;
   font-size: 56px;
   font-weight: 600;
   font-family: electronicFont;
 }
-::v-deep .n-statistic .n-statistic-value__suffix {
+
+:deep(.n-statistic .n-statistic-value__suffi)x {
   color: #0586bd;
   font-size: small;
 }
-::v-deep .onoff .n-statistic .n-statistic-value__content {
+
+:deep(.onoff .n-statistic .n-statistic-value__content) {
   font-size: 36px;
   color: #18a058;
 }
-::v-deep .onoff:nth-child(2) .n-statistic .n-statistic-value__content {
+
+:deep(.onoff:nth-child(2) .n-statistic .n-statistic-value__content) {
   color: #c27666;
 }
 </style>

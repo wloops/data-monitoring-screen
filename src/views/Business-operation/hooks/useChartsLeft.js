@@ -1,4 +1,7 @@
 import * as echarts from 'echarts'
+import { useMonitorStore } from '@/store'
+
+const store = useMonitorStore()
 import api from '@/api'
 
 export const useChartsLeft = () => {
@@ -15,15 +18,24 @@ export const useChartsLeft = () => {
 }
 
 async function getData1(wsMsg) {
-  const label = ['07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00']
-  const value = ['233', 233, 200, 180, 199, 233, 210, 180]
+  let label = ['07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00']
+  let value = ['233', 233, 200, 180, 199, 233, 210, 180]
+  if (wsMsg) {
+    label = wsMsg.label
+    value = wsMsg.value
+    store.SET_BO_LEFT_DATA_01([{ label, value }])
+  }else if(store.BO_LEFT_DATA_01.length > 0){
+    label = store.BO_LEFT_DATA_01[0].label
+    value = store.BO_LEFT_DATA_01[0].value
+  }
+  console.log('左1   data:',wsMsg, store.BO_LEFT_DATA_01)
   return { label, value }
 }
 async function init1(wsMsg, dom) {
   var myChart = echarts.init(dom)
-  var option
-  const { label, value } = wsMsg ? wsMsg : await getData1(wsMsg)
 
+  var option
+  const { label, value } = await getData1(wsMsg)
   /**
    *
    * 作者: GhostCat
@@ -43,30 +55,30 @@ async function init1(wsMsg, dom) {
     tooltip: {
       trigger: 'axis',
       axisPointer: {
-        lineStyle: {
-          color: {
-            type: 'linear',
-            x: 0,
-            y: 0,
-            x2: 0,
-            y2: 1,
-            colorStops: [
-              {
-                offset: 0,
-                color: 'rgba(255,255,255,0)', // 0% 处的颜色
-              },
-              {
-                offset: 0.5,
-                color: 'rgba(255,255,255,1)', // 100% 处的颜色
-              },
-              {
-                offset: 1,
-                color: 'rgba(255,255,255,0)', // 100% 处的颜色
-              },
-            ],
-            global: false, // 缺省为 false
-          },
+        color: {
+          type: 'linear',
+          x: 0,
+          y: 0,
+          x2: 0,
+          y2: 1,
+          colorStops: [
+            {
+              offset: 0,
+              color: 'rgba(255,255,255,0)', // 0% 处的颜色
+            },
+            {
+              offset: 0.5,
+              color: 'rgba(255,255,255,1)', // 100% 处的颜色
+            },
+            {
+              offset: 1,
+              color: 'rgba(255,255,255,0)', // 100% 处的颜色
+            },
+          ],
+          global: false, // 缺省为 false
         },
+        // lineStyle: {
+        // },
       },
     },
     xAxis: [
@@ -77,20 +89,20 @@ async function init1(wsMsg, dom) {
           formatter: '{value}',
           fontSize: 14,
           margin: 20,
-          textStyle: {
+          // textStyle: {
             color: '#7ec7ff',
-          },
+          // },
         },
         axisLine: {
-          lineStyle: {
-            color: '#243753',
-          },
+          color: '#243753',
+          // lineStyle: {
+          // },
         },
         splitLine: {
           show: false,
-          lineStyle: {
-            color: '#243753',
-          },
+          color: '#243753',
+          // lineStyle: {
+          // },
         },
         axisTick: {
           show: false,
@@ -104,9 +116,9 @@ async function init1(wsMsg, dom) {
         type: 'value',
         name: '(百万次)',
         axisLabel: {
-          textStyle: {
+          // textStyle: {
             color: '#7ec7ff',
-          },
+          // },
         },
         nameTextStyle: {
           color: '#7ec7ff',
@@ -115,15 +127,15 @@ async function init1(wsMsg, dom) {
         },
         splitLine: {
           show: false,
-          lineStyle: {
-            color: '#243753',
-          },
+          color: '#243753',
+          // lineStyle: {
+          // },
         },
         axisLine: {
           show: true,
-          lineStyle: {
-            color: '#283352',
-          },
+          color: '#283352',
+          // lineStyle: {
+          // },
         },
         axisTick: {
           show: false,
@@ -142,14 +154,14 @@ async function init1(wsMsg, dom) {
           color: '#19a3df',
           borderColor: '#a3c8d8',
         },
-        lineStyle: {
-          normal: {
-            width: 3,
-            color: '#19a3df',
-          },
+        normal: {
+          width: 3,
+          color: '#19a3df',
         },
+        // lineStyle: {
+        // },
         areaStyle: {
-          normal: {
+          // normal: {
             color: new echarts.graphic.LinearGradient(
               0,
               0,
@@ -167,7 +179,7 @@ async function init1(wsMsg, dom) {
               ],
               false
             ),
-          },
+          // },
         },
         data: value,
       },
@@ -196,7 +208,7 @@ async function getData2(wsMsg) {
     {
       id: 2,
       name: '金融加密机',
-      number: 460.5,
+      number: 460,
     },
     {
       id: 4,
@@ -209,6 +221,14 @@ async function getData2(wsMsg) {
       number: 430,
     },
   ]
+  console.log('左2   wsMsg:', wsMsg)
+  if (wsMsg) {
+    data = wsMsg
+    store.SET_BO_LEFT_DATA_02(wsMsg)
+  }else if(store.BO_LEFT_DATA_02.length > 0){
+    data = store.BO_LEFT_DATA_02
+  }
+  console.log('左2   data:',wsMsg, store.BO_LEFT_DATA_02)
   // 排序
   data.sort((a, b) => b.number - a.number)
   // 取前5个
@@ -219,26 +239,35 @@ async function getData2(wsMsg) {
   data.forEach((item) => {
     item.percent = (item.number / total) * 100
     // 不保留小数点
-    item.percent = item.percent.toFixed(0)
+    item.percent = Number(item.percent.toFixed(0))
   })
   return data
 }
 async function init2(wsMsg) {
-  const data = wsMsg ? wsMsg : await getData2()
-
+  const data = getData2(wsMsg)
   return data
 }
 
 async function getData3(wsMsg) {
-  const xdata = ['网上银行', '手机银行', '电话银行', '自助银行', 'POS', '银行卡业务']
-  const data1 = [6, 8, 5, 4, 5, 6]
-  const data2 = [4, 2, 5, 6, 5, 4]
-
+  let xdata = ['网上银行', '手机银行', '电话银行', '自助银行', 'POS', '银行卡业务']
+  let data1 = [6, 8, 5, 4, 5, 6]
+  let data2 = [4, 2, 5, 6, 5, 4]
+  if (wsMsg) {
+    xdata = wsMsg.xdata
+    data1 = wsMsg.data1
+    data2 = wsMsg.data2
+    store.SET_BO_LEFT_DATA_03([{ xdata, data1, data2 }])
+  }else if(store.BO_LEFT_DATA_03.length > 0){
+    xdata = store.BO_LEFT_DATA_03[0].xdata
+    data1 = store.BO_LEFT_DATA_03[0].data1
+    data2 = store.BO_LEFT_DATA_03[0].data2
+  }
+  console.log('左2   data:',wsMsg, store.BO_LEFT_DATA_02)
   return { xdata, data1, data2 }
 }
 async function init3(wsMsg, dom) {
   var myChart = echarts.init(dom)
-  const { xdata, data1, data2 } = wsMsg ? wsMsg : await getData3()
+  const { xdata, data1, data2 } = await getData3(wsMsg)
 
   var option
   option = {
@@ -282,9 +311,9 @@ async function init3(wsMsg, dom) {
       data: xdata,
       axisLine: {
         show: true, //隐藏X轴轴线
-        lineStyle: {
-          color: '#4DAAFF',
-        },
+        color: '#4DAAFF',
+        // lineStyle: {
+        // },
       },
       axisTick: {
         show: true, //隐藏X轴刻度
@@ -292,9 +321,9 @@ async function init3(wsMsg, dom) {
       axisLabel: {
         show: true,
         fontSize: 10,
-        textStyle: {
+        // textStyle: {
           color: '#fff', //X轴文字颜色
-        },
+        // },
       },
     },
     yAxis: [
@@ -312,15 +341,15 @@ async function init3(wsMsg, dom) {
         },
         axisLine: {
           show: true,
-          lineStyle: {
-            color: '#FFFFFF',
-          },
+          color: '#FFFFFF',
+          // lineStyle: {
+          // },
         },
         axisLabel: {
           show: true,
-          textStyle: {
+          // textStyle: {
             color: '#fff',
-          },
+          // },
         },
       },
       {
@@ -355,8 +384,8 @@ async function init3(wsMsg, dom) {
         type: 'bar',
         barWidth: 10,
         itemStyle: {
-          normal: {
-            barBorderRadius: 8,
+          // normal: {
+            borderRadius: 8,
             color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
               {
                 offset: 0,
@@ -367,7 +396,7 @@ async function init3(wsMsg, dom) {
                 color: '#4693EC',
               },
             ]),
-          },
+          // },
         },
         data: data1,
       },
@@ -376,8 +405,8 @@ async function init3(wsMsg, dom) {
         type: 'bar',
         barWidth: 10,
         itemStyle: {
-          normal: {
-            barBorderRadius: 8,
+          // normal: {
+            borderRadius: 8,
             color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
               {
                 offset: 0,
@@ -388,7 +417,7 @@ async function init3(wsMsg, dom) {
                 color: '#B78063',
               },
             ]),
-          },
+          // },
         },
         data: data2,
       },

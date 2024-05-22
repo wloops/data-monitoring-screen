@@ -1,5 +1,8 @@
 import api from '@/api'
 import * as echarts from 'echarts'
+import { useMonitorStore } from '@/store'
+
+const store = useMonitorStore()
 
 export function useMainData() {
   return {
@@ -28,10 +31,15 @@ const getData1 = async (wsMsg) => {
   }
 
   if (wsMsg) {
-    const ws_data = wsMsg.data
     deviceCount.value = {
-      total: Number(ws_data.totalTransNums),
-      offline: Number(ws_data.failNums),
+      total: Number(wsMsg.total),
+      offline: Number(wsMsg.offline),
+    }
+    store.SET_BO_MIDDLE_DATA_01([deviceCount.value])
+  }else if (store.BO_MIDDLE_DATA_01.length > 0) {
+    deviceCount.value = {
+      total: store.BO_MIDDLE_DATA_01[0].total,
+      offline: store.BO_MIDDLE_DATA_01[0].offline,
     }
   }
 
@@ -44,10 +52,23 @@ async function init1(wsMsg) {
 }
 
 const getData201 = async (wsMsg) => {
-  const xdata = ['04/01', '04/02', '04/03', '04/04', '04/05', '04/06', '04/07', '04/08']
-  const data1 = [6, 8, 5, 4, 5, 6, 7, 6]
-  const data2 = [4, 2, 5, 6, 5, 4, 3, 4]
-  const data3 = [60, 80, 50, 40, 50, 60, 70, 60]
+  let xdata = ['04/01', '04/02', '04/03', '04/04', '04/05', '04/06', '04/07', '04/08']
+  let data1 = [6, 8, 5, 4, 5, 6, 7, 6]
+  let data2 = [4, 2, 5, 6, 5, 4, 3, 4]
+  let data3 = [60, 80, 50, 40, 50, 60, 70, 60]
+
+  if (wsMsg) {
+    xdata = wsMsg.xdata
+    data1 = wsMsg.data1
+    data2 = wsMsg.data2
+    data3 = wsMsg.data3
+    store.SET_BO_MIDDLE_DATA_02_1([{ xdata, data1, data2, data3 }])
+  }else if (store.BO_MIDDLE_DATA_02_1.length > 0) {
+    xdata = store.BO_MIDDLE_DATA_02_1[0].xdata
+    data1 = store.BO_MIDDLE_DATA_02_1[0].data1
+    data2 = store.BO_MIDDLE_DATA_02_1[0].data2
+    data3 = store.BO_MIDDLE_DATA_02_1[0].data3
+  }
 
   return { xdata, data1, data2, data3 }
 }
@@ -106,9 +127,9 @@ async function init201(wsMsg, dom) {
       },
       axisLabel: {
         show: true,
-        textStyle: {
+        // textStyle: {
           color: '#fff', //X轴文字颜色
-        },
+        // },
       },
     },
     yAxis: [
@@ -132,9 +153,9 @@ async function init201(wsMsg, dom) {
         },
         axisLabel: {
           show: true,
-          textStyle: {
+          // textStyle: {
             color: '#fff',
-          },
+          // },
         },
       },
       {
@@ -156,9 +177,9 @@ async function init201(wsMsg, dom) {
         axisLabel: {
           show: true,
           formatter: `{value}`, //右侧Y轴文字显示
-          textStyle: {
+          // textStyle: {
             color: '#fff',
-          },
+          // },
         },
       },
       {
@@ -193,8 +214,8 @@ async function init201(wsMsg, dom) {
         type: 'bar',
         barWidth: 10,
         itemStyle: {
-          normal: {
-            barBorderRadius: 8,
+          // normal: {
+            borderRadius: 8,
             color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
               {
                 offset: 0,
@@ -205,7 +226,7 @@ async function init201(wsMsg, dom) {
                 color: '#4693EC',
               },
             ]),
-          },
+          // },
         },
         data: data1,
       },
@@ -214,8 +235,8 @@ async function init201(wsMsg, dom) {
         type: 'bar',
         barWidth: 10,
         itemStyle: {
-          normal: {
-            barBorderRadius: 8,
+          // normal: {
+            borderRadius: 8,
             color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
               {
                 offset: 0,
@@ -226,7 +247,7 @@ async function init201(wsMsg, dom) {
                 color: '#B78063',
               },
             ]),
-          },
+          // },
         },
         data: data2,
       },
@@ -261,7 +282,7 @@ async function init201(wsMsg, dom) {
 }
 
 const getData202 = async (wsMsg) => {
-  const data = [
+  let data = [
     {
       name: '成功',
       value: 18562,
@@ -271,6 +292,13 @@ const getData202 = async (wsMsg) => {
       value: 4034,
     },
   ]
+  if (wsMsg) {
+    data[0].value = Number(wsMsg[0].value)
+    data[1].value = Number(wsMsg[1].value)
+    store.SET_BO_MIDDLE_DATA_02_2(data)
+  }else if (store.BO_MIDDLE_DATA_02_2.length > 0) {
+    data = store.BO_MIDDLE_DATA_02_2
+  }
   return data
 }
 
@@ -312,10 +340,12 @@ async function init202(wsMsg, dom) {
       res.series.push({
         name: '交易占比',
         type: 'pie',
-        clockWise: false, //顺时加载
-        hoverAnimation: false, //鼠标移入变大
+        clockwise: false, //顺时加载
         radius: [65 - i * 15 + '%', 57 - i * 15 + '%'],
         center: ['50%', '45%'],
+        emphasis:{
+          scale: false, //鼠标移入变大
+        },
         label: {
           show: false,
         },
@@ -343,7 +373,7 @@ async function init202(wsMsg, dom) {
             tooltip: {
               show: false,
             },
-            hoverAnimation: false,
+             emphasis: false,
           },
         ],
       })
@@ -352,10 +382,12 @@ async function init202(wsMsg, dom) {
         type: 'pie',
         silent: true,
         z: 1,
-        clockWise: false, //顺时加载
-        hoverAnimation: false, //鼠标移入变大
+        clockwise: false, //顺时加载
         radius: [65 - i * 15 + '%', 57 - i * 15 + '%'],
         center: ['50%', '45%'],
+        emphasis:{
+          scale: false, //鼠标移入变大
+        },
         label: {
           show: false,
         },
@@ -378,7 +410,7 @@ async function init202(wsMsg, dom) {
             tooltip: {
               show: false,
             },
-            hoverAnimation: false,
+             emphasis: false,
           },
           {
             value: 2.5,
@@ -390,7 +422,7 @@ async function init202(wsMsg, dom) {
             tooltip: {
               show: false,
             },
-            hoverAnimation: false,
+             emphasis: false,
           },
         ],
       })
@@ -468,10 +500,10 @@ async function init202(wsMsg, dom) {
         axisLabel: {
           interval: 0,
           inside: true,
-          textStyle: {
+          // textStyle: {
             color: '#CAD0DF',
             fontSize: 10,
-          },
+          // },
           show: true,
         },
         data: optionData.yAxis,
@@ -492,8 +524,8 @@ async function init202(wsMsg, dom) {
   })
 }
 
-const getData3 = () => {
-  const data = [
+const getData3 = (wsMsg) => {
+  let data = [
     {
       appName: '业务系统',
       userName: 'admin',
@@ -607,18 +639,26 @@ const getData3 = () => {
       errorSource: '业务系统',
     },
   ]
-  const header = ref([
+  let header = [
     // { name: '告警级别', param: 'alarmLevel', width: 10 },
     { name: '应用名称', param: 'appName' },
     { name: '用户名', param: 'userName' },
     { name: '错误信息', param: 'errorInfo' },
     { name: '时间', param: 'time' },
     { name: '错误来源', param: 'errorSource' },
-  ])
+  ]
+  if (wsMsg) {
+    data = wsMsg.data
+    header = wsMsg.header
+    store.SET_BO_MIDDLE_DATA_03([{data, header}])
+  }else if (store.BO_MIDDLE_DATA_03.length > 0) {
+    data = store.BO_MIDDLE_DATA_03[0].data
+    header = store.BO_MIDDLE_DATA_03[0].header
+  }
 
   return { data, header }
 }
 const init3 = (wsMsg) => {
-  const { data, header } = wsMsg ? wsMsg : getData3()
+  const { data, header } = getData3(wsMsg)
   return { data, header }
 }

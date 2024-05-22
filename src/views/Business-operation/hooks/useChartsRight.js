@@ -1,6 +1,9 @@
 import * as echarts from 'echarts'
 import api from '@/api'
-import { co, da } from '~/config-agile-exec/assets/installCanvasRenderer-57e2e58a'
+import { useMonitorStore } from '@/store'
+
+const store = useMonitorStore()
+
 export const useChartsRight = () => {
   return {
     rightChart: {
@@ -15,8 +18,8 @@ export const useChartsRight = () => {
 }
 
 async function getData1(wsMsg) {
-  const xdata = ['04/01', '04/02', '04/03', '04/04', '04/05', '04/06', '04/07', '04/08']
-  const data = [
+  let xdata = ['04/01', '04/02', '04/03', '04/04', '04/05', '04/06', '04/07', '04/08']
+  let data = [
     {
       name: '银行001',
       list: [70, 30, 30, 40, 48, 80, 46, 40],
@@ -42,6 +45,14 @@ async function getData1(wsMsg) {
       list: [70, 70, 30, 90, 70, 40, 20, 70],
     },
   ]
+  if(wsMsg){
+    data = wsMsg.data
+    xdata = wsMsg.xdata
+    store.SET_BO_RIGHT_DATA_01([{xdata, data}])
+  }else if(store.BO_RIGHT_DATA_01.length > 0){
+    data = store.BO_RIGHT_DATA_01[0].data
+    xdata = store.BO_RIGHT_DATA_01[0].xdata
+  }
 
   return { xdata, data }
 }
@@ -124,9 +135,9 @@ async function init1(wsMsg, dom) {
       },
       axisLabel: {
         show: true,
-        textStyle: {
+        // textStyle: {
           color: '#fff', //X轴文字颜色
-        },
+        // },
       },
     },
     yAxis: [
@@ -150,9 +161,9 @@ async function init1(wsMsg, dom) {
         },
         axisLabel: {
           show: true,
-          textStyle: {
+          // textStyle: {
             color: '#fff',
-          },
+          // },
         },
       },
       {
@@ -174,9 +185,9 @@ async function init1(wsMsg, dom) {
         axisLabel: {
           show: false,
           formatter: `{value}`, //右侧Y轴文字显示
-          textStyle: {
+          // textStyle: {
             color: '#fff',
-          },
+          // },
         },
       },
       {
@@ -216,48 +227,34 @@ async function init1(wsMsg, dom) {
 }
 
 async function getData2(wsMsg) {
-  const xdata = ['04/01', '04/02', '04/03', '04/04', '04/05', '04/06', '04/07', '04/08']
-  const data = [
-    {
-      name: '银行001',
-      list: [70, 30, 30, 40, 48, 80, 46, 40],
-    },
-    {
-      name: '银行002',
-      list: [20, 30, 50, 24, 43, 50, 70, 30],
-    },
-    {
-      name: '银行003',
-      list: [80, 40, 50, 60, 45, 60, 77, 40],
-    },
-    {
-      name: '银行004',
-      list: [40, 50, 60, 74, 50, 70, 60, 50],
-    },
-    {
-      name: '银行005',
-      list: [60, 60, 70, 80, 90, 40, 70, 60],
-    },
-    {
-      name: '银行006',
-      list: [70, 70, 30, 90, 70, 40, 20, 70],
-    },
+  let xdata = [
+    'APP01',
+    'APP02',
+    'APP03',
+    'APP04',
+    'APP05',
   ]
+  let data = [80, 70, 30, 85, 25]
+  if(wsMsg){
+    data = wsMsg.data
+    xdata = wsMsg.xdata
+    store.SET_BO_RIGHT_DATA_02([{xdata, data}])
+  }else if(store.BO_RIGHT_DATA_02.length > 0){
+    data = store.BO_RIGHT_DATA_02[0].data
+    xdata = store.BO_RIGHT_DATA_02[0].xdata
+  }
 
   return { xdata, data }
 }
 async function init2(wsMsg, dom) {
   var myChart = echarts.init(dom)
-  // const { xdata, data } = await getData2(wsMsg)
+  const { xdata, data } = await getData2(wsMsg)
+  if (xdata.length < 1 && data.length < 1) {
+    return
+  }
   var option
-  var data = [80, 70, 30, 85, 25]
-  var indicatorname = [
-    '政治品德修养',
-    '社会发展能力',
-    '美劳素质拓展',
-    '身心健康发展',
-    '学业发展能力',
-  ]
+  // var data = [80, 70, 30, 85, 25]
+  var indicatorname = xdata
   // var maxdata = [100, 100, 100, 100, 100]
 
   function contains(arrays, obj) {
@@ -415,8 +412,8 @@ async function init2(wsMsg, dom) {
       axisLabel: {
         show: false,
       },
-      name: {
-        textStyle: {
+      axisName: {
+        // textStyle: {
           rich: {
             a: {
               fontSize: '12',
@@ -431,7 +428,7 @@ async function init2(wsMsg, dom) {
               align: 'left',
             },
           },
-        },
+        // },
 
         formatter: function (params, index) {
           var i = contains(indicatorname, params)
@@ -452,7 +449,7 @@ async function init2(wsMsg, dom) {
 }
 
 function getData3(wsMsg) {
-  const data = [
+  let data = [
     {
       appName: 'APP01',
       time: 500,
@@ -479,16 +476,14 @@ function getData3(wsMsg) {
       time: 1000,
       status: '1',
     },
-    {
-      appName: 'APP07',
-      time: 700,
-    },
-    {
-      appName: 'APP08',
-      time: 100,
-      status: '1',
-    },
+
   ]
+  if(wsMsg){
+    data = wsMsg
+    store.SET_BO_RIGHT_DATA_03(data)
+  }else if(store.BO_RIGHT_DATA_03.length > 0){
+    data = store.BO_RIGHT_DATA_03
+  }
   return data
 }
 function init3(wsMsg) {

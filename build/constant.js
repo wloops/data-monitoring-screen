@@ -1,4 +1,4 @@
-export const OUTPUT_DIR = 'config-agile-exec'
+export const OUTPUT_DIR = 'data-monitoring-screen-inline'
 
 export const PROXY_CONFIG = {
   /**

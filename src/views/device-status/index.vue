@@ -1,8 +1,15 @@
 <script setup>
 import { useChartsLeft, useChartsRight } from './hooks'
-
+import { useSetUpdatedDom } from '@/hooks/useSetUpdatedDom'
 const { leftChart, deviceMessage } = useChartsLeft()
 const { rightChart, numberAnimation } = useChartsRight()
+
+const props = defineProps({
+  parentData: {
+    type: Object,
+    default: () => ({}),
+  },
+})
 
 const deviceInfoShow = ref({
   name: '',
@@ -52,7 +59,7 @@ const initChartLeft302 = (msg) => {
 const rightChart1 = ref(null)
 const numberAnimationInstRef = ref(null)
 const numberAnimationInst2Ref = ref(null)
-const initRightChart1 = (msg) => {
+const initChartRight1 = (msg) => {
   rightChart.init1(msg, rightChart1.value)
 }
 
@@ -72,7 +79,7 @@ watch(numberAnimation, (newVal) => {
 })
 
 const rightChart2 = ref(null)
-const initRightChart2 = (msg) => {
+const initChartRight2 = (msg) => {
   rightChart.init2(msg, rightChart2.value)
 }
 
@@ -82,22 +89,52 @@ const tableConfig = {
   width: '100%',
   height: '130px',
   isRoll: false,
+  'wrap-class': '.DStableWrap',
 }
-const initRightChart3 = (msg) => {
+const initChartRight3 = (msg) => {
   alarmData.value = rightChart.init3(msg, rightChart3.value)
   console.log('alarmData', alarmData.value)
 }
 
 onMounted(() => {
-  initChartLeft1()
-  initChartLeft2()
-  initChartLeft301()
-  initChartLeft302()
-
-  initRightChart1()
-  initRightChart2()
-  initRightChart3()
+  // initChartLeft1()
+  // initChartLeft2()
+  // initChartLeft301()
+  // initChartLeft302()
+  // initChartRight1()
+  // initChartRight2()
+  // initChartRight3()
 })
+
+const setDoms = {
+  DS_LEFT_01: initChartLeft1,
+  DS_LEFT_02: initChartLeft2,
+  DS_LEFT_03_1: initChartLeft301,
+  DS_LEFT_03_2: initChartLeft302,
+  DS_RIGHT_01: initChartRight1,
+  DS_RIGHT_02: initChartRight2,
+  DS_RIGHT_03: initChartRight3,
+}
+
+watch(
+  () => ({ ...props.parentData }),
+  (newValue, oldValue) => {
+    if (newValue) {
+      console.log('newValue', newValue)
+      // 判断newValue 是否为空
+      if (Object.keys(newValue).length === 0) {
+        nextTick(() => {
+          useSetUpdatedDom(newValue, setDoms, 'not')
+        })
+        return
+      }
+      useSetUpdatedDom(newValue, setDoms, 'parent')
+    }
+  },
+  {
+    immediate: true,
+  }
+)
 </script>
 
 <template>
@@ -130,65 +167,57 @@ onMounted(() => {
             </div>
             <div class="card-1-column device-status">
               <div class="status-box status-1">
-                <CustomIcon icon="server" size="80" type="custom"></CustomIcon>
+                <CustomIcon icon="server" :size="80" type="custom"></CustomIcon>
                 <div class="status-text">
                   <p>主机状态</p>
                   <p>
-                    <span
-                      :class="[
-                        deviceStatusShow['host'].status === '正常'
-                          ? 'status-circle'
-                          : 'status-circle status-circle-2',
-                      ]"
-                    ></span>
+                    <span :class="[
+              deviceStatusShow['host'].status === '正常'
+                ? 'status-circle'
+                : 'status-circle status-circle-2',
+            ]"></span>
                     <span>{{ deviceStatusShow['host'].status }}</span>
                   </p>
                 </div>
               </div>
               <div class="status-box status-2">
-                <CustomIcon icon="spare" size="80" type="custom"></CustomIcon>
+                <CustomIcon icon="spare" :size="80" type="custom"></CustomIcon>
                 <div class="status-text">
                   <p>备机状态</p>
                   <p>
-                    <span
-                      :class="[
-                        deviceStatusShow['spare'].status === '正常'
-                          ? 'status-circle'
-                          : 'status-circle status-circle-2',
-                      ]"
-                    ></span>
+                    <span :class="[
+              deviceStatusShow['spare'].status === '正常'
+                ? 'status-circle'
+                : 'status-circle status-circle-2',
+            ]"></span>
                     <span>{{ deviceStatusShow['spare'].status }}</span>
                   </p>
                 </div>
               </div>
               <div class="status-box status-3">
-                <CustomIcon icon="run" size="80" type="custom"></CustomIcon>
+                <CustomIcon icon="run" :size="80" type="custom"></CustomIcon>
                 <div class="status-text">
                   <p>运行状态</p>
                   <p>
-                    <span
-                      :class="[
-                        deviceStatusShow['run'].status === '正常'
-                          ? 'status-circle'
-                          : 'status-circle status-circle-2',
-                      ]"
-                    ></span>
+                    <span :class="[
+              deviceStatusShow['run'].status === '正常'
+                ? 'status-circle'
+                : 'status-circle status-circle-2',
+            ]"></span>
                     <span>{{ deviceStatusShow['run'].status }}</span>
                   </p>
                 </div>
               </div>
               <div class="status-box status-4">
-                <CustomIcon icon="license" size="80" type="custom"></CustomIcon>
+                <CustomIcon icon="license" :size="80" type="custom"></CustomIcon>
                 <div class="status-text">
                   <p>license状态</p>
                   <p>
-                    <span
-                      :class="[
-                        deviceStatusShow['license'].status === '正常'
-                          ? 'status-circle'
-                          : 'status-circle status-circle-2',
-                      ]"
-                    ></span>
+                    <span :class="[
+              deviceStatusShow['license'].status === '正常'
+                ? 'status-circle'
+                : 'status-circle status-circle-2',
+            ]"></span>
                     <span>{{ deviceStatusShow['license'].status }}</span>
                   </p>
                 </div>
@@ -216,27 +245,13 @@ onMounted(() => {
             <div class="chart" ref="rightChart1" style="flex: 3"></div>
             <div class="numberShow" style="flex: 1" w-full>
               <n-statistic label="已签发证书数量" tabular-nums mt-30 mb-20>
-                <n-number-animation
-                  ref="numberAnimationInstRef"
-                  :from="0.0"
-                  :to="numberAnimationShow.number1"
-                  :active="false"
-                  :precision="0"
-                  locale="en-US"
-                  show-separator
-                />
+                <n-number-animation ref="numberAnimationInstRef" :from="0.0" :to="numberAnimationShow.number1"
+                  :active="false" :precision="0" locale="en-US" show-separator />
                 <template #suffix>张</template>
               </n-statistic>
               <n-statistic label="已吊销证书数量" tabular-nums>
-                <n-number-animation
-                  ref="numberAnimationInst2Ref"
-                  :from="0.0"
-                  :to="numberAnimationShow.number2"
-                  :active="false"
-                  :precision="0"
-                  locale="en-US"
-                  show-separator
-                />
+                <n-number-animation ref="numberAnimationInst2Ref" :from="0.0" :to="numberAnimationShow.number2"
+                  :active="false" :precision="0" locale="en-US" show-separator />
                 <template #suffix>张</template>
               </n-statistic>
             </div>
@@ -249,14 +264,9 @@ onMounted(() => {
         </div>
         <div class="container">
           <div data-text="设备告警信息" style="" class="glass">
-            <div class="chart" pl-10 pr-10>
-              <app-table
-                style="margin-top: -10px"
-                ref="rightChart3"
-                :tb-data="alarmData.data"
-                :tb-header="alarmData.header"
-                :table-config="tableConfig"
-              ></app-table>
+            <div class="chart DStableWrap">
+              <app-table style="margin-top: -10px" ref="rightChart3" :tb-data="alarmData.data"
+                :tb-header="alarmData.header" :table-config="tableConfig"></app-table>
             </div>
           </div>
         </div>
@@ -273,9 +283,11 @@ onMounted(() => {
   height: 85vh;
   display: flex;
 }
+
 .column {
   flex: 6;
 }
+
 .column:nth-child(2) {
   flex: 5;
 }
@@ -310,6 +322,7 @@ onMounted(() => {
     height: calc(25vh - 40px);
   }
 }
+
 /*
 .container:hover .glass {
   transform: rotate(0deg);
@@ -333,6 +346,7 @@ onMounted(() => {
   font-weight: 500;
   letter-spacing: 1px;
 }
+
 .container .glass::after {
   content: attr(data-text-2);
   position: absolute;
@@ -358,6 +372,7 @@ onMounted(() => {
   .card-1-column {
     flex: 1;
   }
+
   .card-1-column:nth-child(2) {
     flex: 2;
   }
@@ -365,11 +380,13 @@ onMounted(() => {
   .device-info {
     font-size: 12px;
     margin: 10px;
-    margin-top: 20px;
+    margin-top: 50px;
+
     p {
       padding: 8px;
     }
   }
+
   .device-status {
     display: flex;
     justify-content: space-evenly;
@@ -389,6 +406,7 @@ onMounted(() => {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+
   p {
     margin-top: 8px;
   }
@@ -402,6 +420,7 @@ onMounted(() => {
     background: #00b300;
     margin-right: 10px;
   }
+
   .status-circle-2 {
     background: #fe770b;
   }
@@ -413,15 +432,18 @@ onMounted(() => {
   font-size: 12px;
   margin-right: 10px;
 }
+
 ::v-deep .n-statistic .n-statistic-value {
   text-align: end;
 }
+
 ::v-deep .n-statistic .n-statistic-value__content {
   color: #00cae6;
   font-size: 26px;
   font-weight: 600;
   font-family: electronicFont;
 }
+
 ::v-deep .n-statistic .n-statistic-value__suffix {
   color: #0586bd;
   font-size: small;

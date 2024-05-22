@@ -1,19 +1,92 @@
 <script setup>
+import autofit from 'autofit.js'
+
+// onMounted(() => {
+//   autofit.init({
+//     dh: 1080,
+//     dw: 1920,
+//     el: 'body',
+//     resize: true,
+//   })
+// })
+import gsap from 'gsap'
 import BusinessOperation from '@/views/Business-operation/index.vue'
 import DeviceStatus from '@/views/device-status/index.vue'
 import DeviceRunStatus from '@/views/device-run-status/index.vue'
+import { useUpdateInline } from '@/hooks/useUpdateInline'
 
+// // window.addEventListener('message', function (event) {
+// //   // 确保来源是可信任的域
+// //   // if (event.origin !== '你的网址') {
+// //   //   return
+// //   // }
+// //   // 获取从 Vue 组件发送过来的数据
+// //   var receivedData = event.data
+// //
+// //   // 在这里处理接收到的数据
+// //   console.log('父界面传输过来的数据', event) // 输出传输过来的数据
+// //   // app.config.globalProperties.msg = receivedData.message
+// //   window.sessionStorage.setItem('receivedData', JSON.stringify(receivedData.message))
+// // })
+// console.log('parentData:::', window.parentData)
+// // 从父界面接受的数据
+// const receivedData = JSON.parse(window.sessionStorage.getItem('receivedData'))
+// console.log('receivedData *****', window.parent.parentData)
+
+onMounted(() => {
+  setTimeout(() => {
+    // 关闭加载界面的动画
+    const load = document.getElementById('load')
+    gsap.to(load, {
+      duration: 1,
+      opacity: 0,
+      ease: 'power3.inOut',
+      onComplete: () => {
+        // 删除加载动画的元素
+        load.remove()
+      },
+    })
+  }, 2000)
+})
+const { updateInlineData } = useUpdateInline()
+
+const parentData = ref(null) // 父组件传过来的数据，默认为空
+watch(updateInlineData, (newVal, oldVal) => {
+  console.log('parentData从父界面接受的数据:::', newVal)
+  parentData.value = newVal
+  // 这里可以根据需要，进行其他的逻辑处理
+  // 这里可以给 iframe 返回数据
+  // window.parent.postMessage(JSON.stringify(newVal), 'http://www.nealyang.cn');
+})
+// const parentData = window.parent.parentData ? ref(window.parent.parentData) : ref(null) // 父组件传过来的数据，默认为空
 const currentTab = ref('BusinessOperation')
 
+if (parentData.value && parentData.value.defaultTabKey) {
+  currentTab.value = parentData.value.defaultTabKey
+}
 const tabs = {
   BusinessOperation,
   DeviceStatus,
   DeviceRunStatus,
 }
+
+const componentKey = ref(0);
+
+function refreshComponent() {
+  // 改变key来强制重新渲染组件
+  componentKey.value++;
+}
 </script>
 
 <template>
-  <div style="width: 100%; position: absolute; top: 90px; left: 0">
+  <div id="load">
+    <div class="load_img">
+      <!-- 加载动画 -->
+      <img class="jzxz1" src="./images/jzxz1.png" />
+      <img class="jzxz2" src="./images/jzxz2.png" />
+    </div>
+  </div>
+  <div style="width: 100%; position: absolute; top: 10%; left: 0">
     <div class="map">
       <div class="map1"></div>
       <div class="map2"></div>
@@ -22,11 +95,11 @@ const tabs = {
   </div>
   <div class="main">
     <!-- 头部的盒子 -->
-    <Header-component @selectTab="currentTab = $event" />
+    <Header-component @selectTab="currentTab = $event" :currentTab="currentTab" @refreshComponent="refreshComponent" />
 
     <!-- 页面主体部分 -->
     <section class="mainbox">
-      <component :is="tabs[currentTab]"></component>
+      <component :is="tabs[currentTab]" :parentData="parentData" :key="componentKey"></component>
     </section>
     <!-- 地图模块 -->
   </div>

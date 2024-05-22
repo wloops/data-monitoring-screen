@@ -1,5 +1,6 @@
 <script setup>
 import { useChartsLeft, useChartsRight, useMainData } from './hooks'
+import { useSetUpdatedDom } from '@/hooks/useSetUpdatedDom'
 // import { useThemeVars } from 'naive-ui'
 import DevicesBox from './components/DevicesBox.vue'
 import LoadTop from '@/components/monitoring/LoadTop.vue'
@@ -9,6 +10,13 @@ import LoadTop from '@/components/monitoring/LoadTop.vue'
 const { leftChart } = useChartsLeft()
 const { rightChart } = useChartsRight()
 const { centerChart, deviceCount } = useMainData()
+
+const props = defineProps({
+  parentData: {
+    type: Object,
+    default: () => ({}),
+  },
+})
 
 const devicesData = ref([])
 
@@ -31,9 +39,12 @@ const initChartRight3 = async (msg) => {
   rightData3.value = await rightChart.getData3(msg)
 }
 
+const initChartCenter1 = (msg) => {
+  centerChart.init1(msg)
+}
 const chartCenter2 = ref(null)
-const initChartCenter2 = async (msg) => {
-  await centerChart.init2(msg, chartCenter2.value)
+const initChartCenter2 = (msg) => {
+  centerChart.init2(msg, chartCenter2.value)
 }
 
 const deviceCountNum = ref({
@@ -61,21 +72,52 @@ const tableConfig = {
   width: '100%',
   height: '130px',
   isRoll: false,
+  'wrap-class': '.DRStableWrap',
 }
 const initChartCenter3 = (msg) => {
   countData.value = centerChart.init3(msg)
   console.log('countData', countData.value)
 }
 
-onMounted(async () => {
-  await initChartLeft1()
-  await initChartRight1()
-  await initChartRight2()
-  await initChartRight3()
-  await centerChart.getData1()
-  await initChartCenter2()
-  await initChartCenter3()
-})
+// onMounted( () => {
+//   initChartLeft1()
+//   initChartRight1()
+//   initChartRight2()
+//   initChartRight3()
+//   centerChart.getData1()
+//   initChartCenter2()
+//   initChartCenter3()
+// })
+
+const setDoms = {
+  DRS_LEFT_01: initChartLeft1,
+  DRS_RIGHT_01: initChartRight1,
+  DRS_RIGHT_02: initChartRight2,
+  DRS_RIGHT_03: initChartRight3,
+  DRS_MIDDLE_01: initChartCenter1,
+  DRS_MIDDLE_02: initChartCenter2,
+  DRS_MIDDLE_03: initChartCenter3,
+}
+
+watch(
+  () => ({ ...props.parentData }),
+  (newValue, oldValue) => {
+    if (newValue) {
+      console.log('newValue', newValue)
+      // 判断newValue 是否为空
+      if (Object.keys(newValue).length === 0) {
+        nextTick(() => {
+          useSetUpdatedDom(newValue, setDoms, 'not')
+        })
+        return
+      }
+      useSetUpdatedDom(newValue, setDoms, 'parent')
+    }
+  },
+  {
+    immediate: true,
+  }
+)
 </script>
 
 <template>
@@ -92,44 +134,23 @@ onMounted(async () => {
         <div class="card card-notbg" data-text="设备总数" pt-10>
           <div class="countBox">
             <n-statistic label="" tabular-nums>
-              <n-number-animation
-                ref="numAnimRefCount"
-                :from="0.0"
-                :to="deviceCountNum.online + deviceCountNum.offline"
-                :active="false"
-                :precision="0"
-                locale="en-US"
-                show-separator
-              />
+              <n-number-animation ref="numAnimRefCount" :from="0.0" :to="deviceCountNum.online + deviceCountNum.offline"
+                :active="false" :precision="0" locale="en-US" show-separator />
               <template #suffix>台</template>
             </n-statistic>
           </div>
           <div class="areBox">
             <div class="onlineBox card onoff" data-text="在线设备数量">
               <n-statistic label="" tabular-nums>
-                <n-number-animation
-                  ref="numAnimRefOnline"
-                  :from="0.0"
-                  :to="deviceCountNum.online"
-                  :active="false"
-                  :precision="0"
-                  locale="en-US"
-                  show-separator
-                />
+                <n-number-animation ref="numAnimRefOnline" :from="0.0" :to="deviceCountNum.online" :active="false"
+                  :precision="0" locale="en-US" show-separator />
                 <template #suffix>台</template>
               </n-statistic>
             </div>
             <div class="offlineBox card onoff" data-text="离线设备数量">
               <n-statistic label="" tabular-nums>
-                <n-number-animation
-                  ref="numAnimRefOffline"
-                  :from="0.0"
-                  :to="deviceCountNum.offline"
-                  :active="false"
-                  :precision="0"
-                  locale="en-US"
-                  show-separator
-                />
+                <n-number-animation ref="numAnimRefOffline" :from="0.0" :to="deviceCountNum.offline" :active="false"
+                  :precision="0" locale="en-US" show-separator />
                 <template #suffix>台</template>
               </n-statistic>
             </div>
@@ -139,13 +160,9 @@ onMounted(async () => {
           <div class="chart" ref="chartCenter2"></div>
         </div>
         <div class="card" data-text="设备分类统计信息">
-          <div class="chart" pl-10 pr-10>
-            <app-table
-              ref="centerChart3"
-              :tb-data="countData.data"
-              :tb-header="countData.header"
-              :table-config="tableConfig"
-            ></app-table>
+          <div class="chart DRStableWrap" style="height: 200px;" pl-10 pr-10>
+            <app-table ref="centerChart3" :tb-data="countData.data" :tb-header="countData.header"
+              :table-config="tableConfig"></app-table>
           </div>
         </div>
       </div>
@@ -168,6 +185,7 @@ onMounted(async () => {
 .cardBox {
   display: flex;
 }
+
 .column {
   flex: 2;
   height: 90vh;
@@ -182,6 +200,7 @@ onMounted(async () => {
     flex: 1;
     position: relative;
   }
+
   .card::before {
     content: attr(data-text);
     position: absolute;
@@ -203,13 +222,16 @@ onMounted(async () => {
     /* font-family: 'electronicFont'; */
     text-shadow: -1px 8px 16px rgba(47, 131, 209, 0.55);
   }
+
   .chart {
     width: 100%;
     height: 100%;
   }
 }
+
 .column:nth-child(2) {
   flex: 3;
+
   .card:nth-child(1) {
     border: 0px double rgba(64, 121, 226, 0.35);
     display: flex;
@@ -232,14 +254,16 @@ onMounted(async () => {
       /* padding: 0 30px; */
       box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
     }
+
     .areBox {
       width: 102%;
       height: 100%;
-      flex: 2;
+      flex: 4;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
+
     .onlineBox,
     .offlineBox {
       height: 100%;
@@ -254,18 +278,27 @@ onMounted(async () => {
       padding-top: 25px;
     }
   }
+
+  /* .card:nth-child(2) {
+    flex: 2;
+    height: 100%;
+  } */
+
   .card-notbg::before {
     background: transparent;
     font-size: 18px;
     font-weight: 600;
   }
 }
+
 .column:nth-child(3) {
   flex: 2;
 }
+
 .card1 {
   display: flex;
   flex-direction: column;
+
   .derviceBox {
     flex: 1;
     margin: 10px;
@@ -273,6 +306,7 @@ onMounted(async () => {
     justify-content: space-between;
     align-items: center;
   }
+
   .derviceBox:nth-child(1) {
     margin-top: 25px;
   }
@@ -283,23 +317,28 @@ onMounted(async () => {
   color: #b1b2bb;
   font-size: 12px;
 }
+
 ::v-deep .n-statistic .n-statistic-value {
   text-align: end;
 }
+
 ::v-deep .n-statistic .n-statistic-value__content {
   color: #5486f3;
   font-size: 56px;
   font-weight: 600;
   font-family: electronicFont;
 }
+
 ::v-deep .n-statistic .n-statistic-value__suffix {
   color: #0586bd;
   font-size: small;
 }
+
 ::v-deep .onoff .n-statistic .n-statistic-value__content {
   font-size: 36px;
   color: #18a058;
 }
+
 ::v-deep .onoff:nth-child(2) .n-statistic .n-statistic-value__content {
   color: #c27666;
 }

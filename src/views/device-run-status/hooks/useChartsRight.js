@@ -1,5 +1,8 @@
 import * as echarts from 'echarts'
 import api from '@/api'
+import { useMonitorStore } from '@/store'
+
+const store = useMonitorStore()
 export const useChartsRight = () => {
   return {
     rightChart: {
@@ -14,7 +17,7 @@ export const useChartsRight = () => {
 }
 
 async function getData1(wsMsg) {
-  const data = [
+  let data = [
     {
       id: 1,
       name: '签名服务器',
@@ -41,16 +44,22 @@ async function getData1(wsMsg) {
       percent: 20,
     },
   ]
+  if (wsMsg) {
+    data = wsMsg
+    store.SET_DRS_RIGHT_DATA_01(data)
+  }else if (store.DRS_RIGHT_DATA_01.length > 0) {
+    data = store.DRS_RIGHT_DATA_01
+  }
   return data
 }
 async function init1(wsMsg) {
-  const data = wsMsg ? wsMsg : await getData1()
+  const data = await getData1(wsMsg)
 
   return data
 }
 
 async function getData2(wsMsg) {
-  const data = [
+  let data = [
     {
       id: 1,
       name: '签名服务器',
@@ -77,16 +86,22 @@ async function getData2(wsMsg) {
       percent: 30,
     },
   ]
+  if (wsMsg) {
+    data = wsMsg
+    store.SET_DRS_RIGHT_DATA_02(data)
+  }else if (store.DRS_RIGHT_DATA_02.length > 0) {
+    data = store.DRS_RIGHT_DATA_02
+  }
   return data
 }
 async function init2(wsMsg) {
-  const data = wsMsg ? wsMsg : await getData2()
+  const data = await getData2(wsMsg)
 
   return data
 }
 
 async function getData3(wsMsg) {
-  const data = [
+  let data = [
     {
       id: 2,
       name: '金融加密机',
@@ -113,10 +128,16 @@ async function getData3(wsMsg) {
       percent: 43,
     },
   ]
+  if (wsMsg) {
+    data = wsMsg
+    store.SET_DRS_RIGHT_DATA_03(data)
+  }else if (store.DRS_RIGHT_DATA_03.length > 0) {
+    data = store.DRS_RIGHT_DATA_03
+  }
   return data
 }
 async function init3(wsMsg) {
-  const data = wsMsg ? wsMsg : await getData3()
+  const data = await getData3(wsMsg)
 
   return data
 }

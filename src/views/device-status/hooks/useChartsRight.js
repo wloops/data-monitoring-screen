@@ -1,5 +1,9 @@
 import * as echarts from 'echarts'
 import api from '@/api'
+import { useMonitorStore } from '@/store'
+
+const store = useMonitorStore()
+
 export const useChartsRight = () => {
   return {
     rightChart: {
@@ -19,14 +23,31 @@ const numberAnimation = ref({
   number2: 0,
 })
 async function getData1(wsMsg) {
-  const xdata = ['04/01', '04/02', '04/03', '04/04', '04/05', '04/06', '04/07', '04/08']
-  const data1 = [6, 8, 5, 4, 5, 6, 7, 6]
-  const data2 = [4, 2, 5, 6, 5, 4, 3, 4]
-  const data3 = [60, 80, 50, 40, 50, 60, 70, 60]
+  let xdata = ['04/01', '04/02', '04/03', '04/04', '04/05', '04/06', '04/07', '04/08']
+  let data1 = [6, 8, 5, 4, 5, 6, 7, 6]
+  let data2 = [4, 2, 5, 6, 5, 4, 3, 4]
+  let data3 = [60, 80, 50, 40, 50, 60, 70, 60]
 
   // 数字动画
-  const number1 = 994745202
-  const number2 = 5266338
+  let number1 = 994745202
+  let number2 = 5266338
+  
+  if (wsMsg) {
+    xdata = wsMsg.xdata
+    data1 = wsMsg.data1
+    data2 = wsMsg.data2
+    data3 = wsMsg.data3
+    number1 = wsMsg.number1
+    number2 = wsMsg.number2
+    store.SET_DS_RIGHT_DATA_01([{ xdata, data1, data2, data3, number1, number2 }])
+  }else if (store.DS_RIGHT_DATA_01.length > 0) {
+    xdata = store.DS_RIGHT_DATA_01[0].xdata
+    data1 = store.DS_RIGHT_DATA_01[0].data1
+    data2 = store.DS_RIGHT_DATA_01[0].data2
+    data3 = store.DS_RIGHT_DATA_01[0].data3
+    number1 = store.DS_RIGHT_DATA_01[0].number1
+    number2 = store.DS_RIGHT_DATA_01[0].number2
+  }
 
   return { xdata, data1, data2, data3, number1, number2 }
 }
@@ -90,9 +111,9 @@ async function init1(wsMsg, dom) {
       },
       axisLabel: {
         show: true,
-        textStyle: {
+        // textStyle: {
           color: '#fff', //X轴文字颜色
-        },
+        // },
       },
     },
     yAxis: [
@@ -116,9 +137,9 @@ async function init1(wsMsg, dom) {
         },
         axisLabel: {
           show: true,
-          textStyle: {
+          // textStyle: {
             color: '#fff',
-          },
+          // },
         },
       },
       {
@@ -140,9 +161,9 @@ async function init1(wsMsg, dom) {
         axisLabel: {
           show: true,
           formatter: `{value}`, //右侧Y轴文字显示
-          textStyle: {
+          // textStyle: {
             color: '#fff',
-          },
+          // },
         },
       },
       {
@@ -177,8 +198,8 @@ async function init1(wsMsg, dom) {
         type: 'bar',
         barWidth: 10,
         itemStyle: {
-          normal: {
-            barBorderRadius: 8,
+          // normal: {
+            borderRadius: 8,
             color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
               {
                 offset: 0,
@@ -189,7 +210,7 @@ async function init1(wsMsg, dom) {
                 color: '#4693EC',
               },
             ]),
-          },
+          // },
         },
         data: data1,
       },
@@ -198,8 +219,8 @@ async function init1(wsMsg, dom) {
         type: 'bar',
         barWidth: 10,
         itemStyle: {
-          normal: {
-            barBorderRadius: 8,
+          // normal: {
+            borderRadius: 8,
             color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
               {
                 offset: 0,
@@ -210,7 +231,7 @@ async function init1(wsMsg, dom) {
                 color: '#B78063',
               },
             ]),
-          },
+          // },
         },
         data: data2,
       },
@@ -245,10 +266,19 @@ async function init1(wsMsg, dom) {
 }
 
 async function getData2(wsMsg) {
-  const xdata = ['04/01', '04/02', '04/03', '04/04', '04/05', '04/06', '04/07', '04/08']
-  const data1 = [6, 8, 5, 4, 5, 6, 7, 6]
-  const data2 = [4, 2, 5, 6, 5, 4, 3, 4]
-
+  let xdata = ['04/01', '04/02', '04/03', '04/04', '04/05', '04/06', '04/07', '04/08']
+  let data1 = [6, 8, 5, 4, 5, 6, 7, 6]
+  let data2 = [4, 2, 5, 6, 5, 4, 3, 4]
+  if (wsMsg) {
+    xdata = wsMsg.xdata
+    data1 = wsMsg.data1
+    data2 = wsMsg.data2
+    store.SET_DS_RIGHT_DATA_02([{ xdata, data1, data2 }])
+  }else if (store.DS_RIGHT_DATA_02.length > 0) {
+    xdata = store.DS_RIGHT_DATA_02[0].xdata
+    data1 = store.DS_RIGHT_DATA_02[0].data1
+    data2 = store.DS_RIGHT_DATA_02[0].data2
+  }
   return { xdata, data1, data2 }
 }
 async function init2(wsMsg, dom) {
@@ -306,9 +336,9 @@ async function init2(wsMsg, dom) {
       },
       axisLabel: {
         show: true,
-        textStyle: {
+        // textStyle: {
           color: '#fff', //X轴文字颜色
-        },
+        // },
       },
     },
     yAxis: [
@@ -332,9 +362,9 @@ async function init2(wsMsg, dom) {
         },
         axisLabel: {
           show: true,
-          textStyle: {
+          // textStyle: {
             color: '#fff',
-          },
+          // },
         },
       },
       {
@@ -369,8 +399,8 @@ async function init2(wsMsg, dom) {
         type: 'bar',
         barWidth: 10,
         itemStyle: {
-          normal: {
-            barBorderRadius: 8,
+          // normal: {
+            borderRadius: 8,
             color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
               {
                 offset: 0,
@@ -381,7 +411,7 @@ async function init2(wsMsg, dom) {
                 color: '#4693EC',
               },
             ]),
-          },
+          // },
         },
         data: data1,
       },
@@ -390,8 +420,8 @@ async function init2(wsMsg, dom) {
         type: 'bar',
         barWidth: 10,
         itemStyle: {
-          normal: {
-            barBorderRadius: 8,
+          // normal: {
+            borderRadius: 8,
             color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
               {
                 offset: 0,
@@ -402,7 +432,7 @@ async function init2(wsMsg, dom) {
                 color: '#B78063',
               },
             ]),
-          },
+          // },
         },
         data: data2,
       },
@@ -416,7 +446,7 @@ async function init2(wsMsg, dom) {
   })
 }
 
-const getData3 = () => {
+const getData3 = (wsMsg) => {
   const data = [
     {
       alarmLevel: '紧急|2',
@@ -439,11 +469,11 @@ const getData3 = () => {
       inputDate: '2023-07-05',
     },
   ]
-  const header = ref([
+  const header = [
     { name: '告警级别', param: 'alarmLevel', width: 10 },
     { name: '告警内容', param: 'message', width: 60 },
     { name: '时间', param: 'inputDate', width: 30 },
-  ])
+  ]
 
   return { data, header }
 }

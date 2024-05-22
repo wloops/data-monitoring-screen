@@ -1,5 +1,8 @@
 import * as echarts from 'echarts'
 import api from '@/api'
+import { useMonitorStore } from '@/store'
+
+const store = useMonitorStore()
 
 export const useChartsLeft = () => {
   return {
@@ -12,18 +15,18 @@ export const useChartsLeft = () => {
 
 // 1
 
-async function getData(wsMsg) {
-  const data = [
+ function getData(wsMsg) {
+  let data = [
     {
       id: 1,
       name: '电子签章服务器0086',
       ip: '192.168.1.0.1',
       port: '80',
       runTime: '132.5个小时',
-      cpuUsage: '28',
-      memoryUsage: '56',
+      cpuUsage: 28,
+      memoryUsage: 56,
       // diskUsage: '80%',
-      networkUsage: '86',
+      networkUsage: 86,
       chartData: {
         name: '设备风险值',
         value: 96,
@@ -35,10 +38,10 @@ async function getData(wsMsg) {
       ip: '192.168.1.0.2',
       port: '80',
       runTime: '1632.5个小时',
-      cpuUsage: '48',
-      memoryUsage: '96',
+      cpuUsage: 48,
+      memoryUsage: 96,
       // diskUsage: '80%',
-      networkUsage: '15',
+      networkUsage: 15,
       chartData: {
         name: '设备风险值',
         value: 66,
@@ -50,21 +53,26 @@ async function getData(wsMsg) {
       ip: '192.168.1.0.33',
       port: '80',
       runTime: '13244.5个小时',
-      cpuUsage: '80',
-      memoryUsage: '56',
+      cpuUsage: 80,
+      memoryUsage: 56,
       // diskUsage: '80%',
-      networkUsage: '45',
+      networkUsage: 45,
       chartData: {
         name: '设备风险值',
         value: 26,
       },
     },
   ]
-
+  if (wsMsg) {
+    data = wsMsg
+    store.SET_DRS_LEFT_DATA_01(data)
+  }else if (store.DRS_LEFT_DATA_01.length > 0) {
+    data = store.DRS_LEFT_DATA_01
+  }
   return data
 }
-async function init(wsMsg, dom) {
-  const data = wsMsg ? wsMsg : await getData(wsMsg)
+ function init(wsMsg, dom) {
+  const data = wsMsg
   // 1. 实例化对象
   let myChart = echarts.init(dom)
   // 2.指定配置
@@ -133,11 +141,11 @@ async function init(wsMsg, dom) {
         },
         axisLabel: {
           distance: -20,
-          textStyle: {
+          // textStyle: {
             color: 'inherit',
             fontSize: '10',
             fontWeight: 'bold',
-          },
+          // },
         },
         pointer: {
           show: 0,
@@ -187,10 +195,10 @@ async function init(wsMsg, dom) {
         detail: {
           show: true,
           offsetCenter: [0, '65%'],
-          textStyle: {
+          // textStyle: {
             fontSize: 16,
             color: 'inherit',
-          },
+          // },
           formatter: ['{value} ' + (item.unit || ''), '{name|' + item.name + '}'].join('\n'),
           rich: {
             name: {
@@ -201,9 +209,9 @@ async function init(wsMsg, dom) {
           },
         },
         itemStyle: {
-          normal: {
+          // normal: {
             color: highlight,
-          },
+          // },
         },
         data: [
           {

@@ -1,14 +1,14 @@
 <script setup>
 import autofit from 'autofit.js'
 
-// onMounted(() => {
-//   autofit.init({
-//     dh: 1080,
-//     dw: 1920,
-//     el: 'body',
-//     resize: true,
-//   })
-// })
+onMounted(() => {
+  autofit.init({
+    dh: 1080,
+    dw: 1920,
+    el: '#main',
+    resize: true,
+  })
+})
 import gsap from 'gsap'
 import BusinessOperation from '@/views/Business-operation/index.vue'
 import DeviceStatus from '@/views/device-status/index.vue'
@@ -86,22 +86,29 @@ function refreshComponent() {
       <img class="jzxz2" src="./images/jzxz2.png" />
     </div>
   </div>
-  <div style="width: 100%; position: absolute; top: 10%; left: 0">
-    <div class="map">
-      <div class="map1"></div>
-      <div class="map2"></div>
-      <div class="map3"></div>
-    </div>
-  </div>
-  <div class="main">
-    <!-- 头部的盒子 -->
-    <Header-component @selectTab="currentTab = $event" :currentTab="currentTab" @refreshComponent="refreshComponent" />
 
-    <!-- 页面主体部分 -->
-    <section class="mainbox">
-      <component :is="tabs[currentTab]" :parentData="parentData" :key="componentKey"></component>
-    </section>
-    <!-- 地图模块 -->
+  <div class="main" id="main">
+    <div style="width: 100%; position: absolute; top: 10%; left: 0">
+      <div class="map">
+        <div class="map1"></div>
+        <!-- 地图模块 -->
+        <div class="map2"></div>
+        <div class="map3"></div>
+      </div>
+    </div>
+    <div>
+
+      <!-- 头部的盒子 -->
+      <div id="headerBox" z-2000>
+        <Header-component @selectTab="currentTab = $event" :currentTab="currentTab"
+          @refreshComponent="refreshComponent" />
+      </div>
+
+      <!-- 页面主体部分 -->
+      <section class="mainbox" id="mainbox">
+        <component :is="tabs[currentTab]" :parentData="parentData" :key="componentKey"></component>
+      </section>
+    </div>
   </div>
 </template>
 

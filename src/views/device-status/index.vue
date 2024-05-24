@@ -280,7 +280,7 @@ watch(
   border: 10px double #00357a;
   border-radius: 18px;
   margin: 20px;
-  height: 85vh;
+  height: 100vh;
   display: flex;
 }
 
@@ -304,22 +304,23 @@ watch(
 .container .glass {
   position: relative;
   width: 95%;
-  height: 25vh;
+  height: 30vh;
   background: transparent;
   border: 1px solid rgba(2, 24, 68, 0.1);
   box-shadow: 0 25px 25px rgba(0, 0, 0, 0.25);
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: end;
   transition: 0.5s;
   border-radius: 10px;
+  padding-bottom: 15px;
   margin: 0 -45px;
   /* backdrop-filter: blur(10px); */
   transform: rotate(calc(var(--r) * 1deg));
 
   .chart {
     width: 100%;
-    height: calc(25vh - 40px);
+    height: calc(30vh - 40px);
   }
 }
 
@@ -426,25 +427,25 @@ watch(
   }
 }
 
-::v-deep .n-statistic .n-statistic__label {
+:deep(.n-statistic .n-statistic__label) {
   text-align: end;
   color: #b1b2bb;
   font-size: 12px;
   margin-right: 10px;
 }
 
-::v-deep .n-statistic .n-statistic-value {
+:deep(.n-statistic .n-statistic-value) {
   text-align: end;
 }
 
-::v-deep .n-statistic .n-statistic-value__content {
+:deep(.n-statistic .n-statistic-value__content) {
   color: #00cae6;
   font-size: 26px;
   font-weight: 600;
   font-family: electronicFont;
 }
 
-::v-deep .n-statistic .n-statistic-value__suffix {
+:deep(.n-statistic .n-statistic-value__suffix) {
   color: #0586bd;
   font-size: small;
   margin-left: 10px;
@@ -452,27 +453,27 @@ watch(
 }
 
 /* 将n-data-table的背景设置为透明 */
-::v-deep .n-data-table {
+:deep(.n-data-table) {
   background: transparent;
 }
 
 /* 如果需要去除表格内的背景色，可以进一步覆盖 */
-::v-deep .n-data-table .n-data-table-wrapper {
+:deep(.n-data-table .n-data-table-wrapper) {
   background: transparent;
 }
 
 /* 去除表头的背景色 */
-::v-deep .n-data-table .n-data-table-header {
+:deep(.n-data-table .n-data-table-header) {
   background: transparent;
 }
 
 /* 去除表格行的背景色（如果有默认的行背景色） */
-::v-deep .n-data-table .n-data-table-row {
+:deep(.n-data-table .n-data-table-row) {
   background: transparent;
 }
 
 /* 去除表格单元格的背景色 */
-::v-deep .n-data-table .n-data-table-cell {
+:deep(.n-data-table .n-data-table-cell) {
   background: transparent;
 }
 </style>

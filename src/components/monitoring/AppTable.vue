@@ -40,33 +40,31 @@ onMounted(() => {
   }
 
   if (props.tableConfig.isRoll && props.tableConfig.isRoll === true) {
-    setRoll()
-  } else if (props.tbData && props.tbData.length > 5) {
-    setRoll()
+    scroll.value = true
   } else {
     scroll.value = false
   }
 })
-function setRoll() {
-  // setInterval(() => {
-  //   tabelRoll()
-  // }, 3000)
-  scroll.value = true
-}
-function tabelRoll() {
-  clearTimeout(timer.value)
-  animate.value = true
-  timer.value = setTimeout(() => {
-    if (props.tbData && props.tbData.length > 5) {
-      props.tbData.push(props.tbData[0])
-      props.tbData.shift()
-      lineType.value = !lineType.value
-      animate.value = false
-    }
-  }, 500)
-}
+// function setRoll() {
+//   // setInterval(() => {
+//   //   tabelRoll()
+//   // }, 3000)
+// }
+// function tabelRoll() {
+//   clearTimeout(timer.value)
+//   animate.value = true
+//   timer.value = setTimeout(() => {
+//     if (props.tbData && props.tbData.length > 5) {
+//       props.tbData.push(props.tbData[0])
+//       props.tbData.shift()
+//       lineType.value = !lineType.value
+//       animate.value = false
+//     }
+//   }, 500)
+// }
 
-console.log('tbData:', props.tbData)
+console.table(props.tableConfig)
+console.log('scroll:', scroll.value)
 </script>
 
 <template>
@@ -79,7 +77,7 @@ console.log('tbData:', props.tbData)
     </div>
     <div class="seamlessScroll" style="width: 100%">
 
-      <Vue3Marquee vertical :duration="200" :pause-on-hover="true">
+      <Vue3Marquee vertical :duration="200" :pause-on-hover="true" v-if="scroll">
         <div style="width: 100%;" v-for="(item, index) in props.tbData" :key="index">
           <div class="tb-body">
             <div class="tb-body" :style="{
@@ -107,6 +105,32 @@ console.log('tbData:', props.tbData)
           </div>
         </div>
       </Vue3Marquee>
+      <div v-else style="width: 100%;" v-for="(item, index) in props.tbData" :key="index">
+        <div class="tb-body">
+          <div class="tb-body" :style="{
+    height: tableConfig.height,
+    overflow: 'hidden',
+    textAlign: tableConfig.align || 'left',
+  }" :class="{ anim: animate }">
+            <div class="tb-list" v-for="(item, index) in props.tbData"
+              :class="{ 'tb-zebra1': !lineType, 'tb-zebra2': lineType }">
+              <div v-for="itemSon in tbHeader" :class="['tb-item', { 'item-flex': item.width }]"
+                :style="{ width: itemSon.width + '%', textAlign: tableConfig.align || 'left' }">
+                <template v-if="typeof item[itemSon.param] === 'string' && item[itemSon.param].indexOf('|') > -1
+    ">
+                  <n-badge dot v-if="item[itemSon.param].split('|')[1] === '0'" color="#0E6DB6" />
+                  <n-badge dot v-if="item[itemSon.param].split('|')[1] === '1'" color="#E69C68" />
+                  <n-badge dot v-if="item[itemSon.param].split('|')[1] === '2'" color="#D85C6D" />
+                  {{ item[itemSon.param].split('|')[0] }}
+                </template>
+                <template v-else>
+                  {{ item[itemSon.param] }}
+                </template>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <!-- <vue3-seamless-scroll :list="list" class="seamlessScroll" v-model="scroll" :step="0.5" :hover="true">
       <div class="item" v-for="(item, index) in props.tbData" :key="index">

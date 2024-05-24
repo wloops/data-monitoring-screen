@@ -72,7 +72,7 @@ const countData = ref({})
 const tableConfig = {
   width: '100%',
   height: '80%',
-  isRoll: false,
+  isRoll: true,
   'wrap-class': '.BOtableWrap',
 }
 const initChartCenter3 = (msg) => {
@@ -201,7 +201,7 @@ watch(
 </script>
 
 <template>
-  <div style="max-width: 100%; ">
+  <div>
     <div class="cardBox">
       <div class="column">
         <div class="card" data-text="实时总交易趋势">
@@ -276,17 +276,16 @@ watch(
 <style scoped>
 .cardBox {
   display: flex;
-  margin: 10px 20px;
-  height: 85vh;
+  padding: 10px 20px;
 }
 
 .column {
   flex: 2;
   height: 100vh;
-  margin-top: 10px;
+  /* margin-top: 10px; */
   /* border: 5px double #00357a; */
   display: flex;
-  justify-content: center;
+  /* justify-content: center; */
   flex-direction: column;
 
   .card {

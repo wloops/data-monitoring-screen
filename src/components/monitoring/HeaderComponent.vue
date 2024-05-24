@@ -204,7 +204,7 @@ const refresh = () => {
 
 <template>
   <div>
-    <header>
+    <header z-2000>
       <div class="top-left-box">
         <div class="left-message" v-if="!isMultiDevice">
           <span style="margin-right: 3px">

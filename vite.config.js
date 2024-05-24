@@ -39,5 +39,17 @@ export default defineConfig(({ command, mode }) => {
       reportCompressedSize: false, // 启用/禁用 gzip 压缩大小报告
       chunkSizeWarningLimit: 1024, // chunk 大小警告的限制（单位kb）
     },
+    css: {
+      loaderOptions: {
+        postcss: {
+          plugins: [
+            require('postcss-pxtorem')({
+              rootValue: 16, // 根据设计稿大小设置
+              propList: ['*'], // 需要转换的属性，这里选择转换所有属性
+            }),
+          ],
+        }
+      }
+    }
   }
 })

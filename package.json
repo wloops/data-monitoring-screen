@@ -76,6 +76,8 @@
     "jsencrypt": "^3.3.2",
     "lint-staged": "^14.0.1",
     "naive-ui": "^2.38.1",
+    "postcss-loader": "^8.1.1",
+    "postcss-pxtorem": "^6.1.0",
     "qs": "^6.11.2",
     "rollup-plugin-visualizer": "^5.9.2",
     "sass": "^1.69.0",

@@ -9,12 +9,14 @@
 
 import axios from 'axios'
 import { setupInterceptors } from './interceptors'
+console.log('envUse', envUse('BASE_API'))
 
 export function createAxios(options = {}) {
   axios.defaults.withCredentials = true
   const defaultOptions = {
     // baseURL: '/api',
-    baseURL: import.meta.env.VITE_BASE_API,
+    // baseURL: import.meta.env.VITE_BASE_API,
+    baseURL: envUse('BASE_API'),
     timeout: 12000,
     // withCredentials: true, //携带上cookie
   }

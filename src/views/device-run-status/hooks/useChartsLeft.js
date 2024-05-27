@@ -196,14 +196,14 @@ export const useChartsLeft = () => {
           show: true,
           offsetCenter: [0, '65%'],
           // textStyle: {
-            fontSize: 16,
+            fontSize: 24,
             color: 'inherit',
           // },
           formatter: ['{value} ' + (item.unit || ''), '{name|' + item.name + '}'].join('\n'),
           rich: {
             name: {
-              fontSize: 12,
-              lineHeight: 15,
+              fontSize: 16,
+              lineHeight: 25,
               color: '#ddd',
             },
           },

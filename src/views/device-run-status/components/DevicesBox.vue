@@ -106,7 +106,7 @@ const progressColor = (percent) => {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    font-size: 14px;
+    font-size: 20px;
     font-weight: 500;
     color: #ffffffc7;
     margin-top: 25px;
@@ -125,7 +125,7 @@ const progressColor = (percent) => {
       justify-content: center;
       align-items: center;
       flex-direction: column;
-      font-size: 10px;
+      font-size: 14px;
       margin-top: 10px;
 
       .dervice-info-item {
@@ -134,10 +134,10 @@ const progressColor = (percent) => {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-top: 10px;
+        margin-top: 5px;
 
         .dervice-info-item-title {
-          font-size: 12px;
+          font-size: 14px;
           font-weight: 500;
           color: #ffffffc7;
           margin-right: 10px;
@@ -146,7 +146,7 @@ const progressColor = (percent) => {
 
         .dervice-info-item-content {
           flex: 2;
-          font-size: 12px;
+          font-size: 16px;
           font-weight: 500;
           color: #ffffffc7;
           /* text-align: right; */

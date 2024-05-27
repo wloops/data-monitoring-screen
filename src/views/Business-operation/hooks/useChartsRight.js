@@ -135,6 +135,7 @@ async function init1(wsMsg, dom) {
       },
       axisLabel: {
         show: true,
+        fontSize: 14,
         // textStyle: {
           color: '#fff', //X轴文字颜色
         // },
@@ -416,14 +417,14 @@ async function init2(wsMsg, dom) {
         // textStyle: {
           rich: {
             a: {
-              fontSize: '12',
+              fontSize: '14',
               color: '#007197',
               align: 'left',
               lineHeight: '30',
               fontWeight: 'bold',
             },
             b: {
-              fontSize: '12',
+              fontSize: '16',
               color: '#00CAE6',
               align: 'left',
             },

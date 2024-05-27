@@ -160,7 +160,7 @@ watch(
           <div class="chart" ref="chartCenter2"></div>
         </div>
         <div class="card" data-text="设备分类统计信息">
-          <div class="chart DRStableWrap" style="height: 200px;" pl-10 pr-10>
+          <div class="chart DRStableWrap" pl-10 pr-10>
             <app-table ref="centerChart3" :tb-data="countData.data" :tb-header="countData.header"
               :table-config="tableConfig"></app-table>
           </div>
@@ -207,7 +207,7 @@ watch(
     top: 0px;
     left: 25%;
     width: 50%;
-    height: 25px;
+    height: 30px;
     background: rgba(64, 121, 226, 0.35);
     display: flex;
     justify-content: center;
@@ -215,7 +215,7 @@ watch(
     padding: 0 30px;
     border-radius: 0 0 20px 20px;
     color: #ffffffc7;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 550;
     letter-spacing: 1px;
     clip-path: polygon(1px 0, 20px 100%, calc(100% - 20px) 100%, calc(100% - 1px) 0);
@@ -315,7 +315,7 @@ watch(
 :deep(.n-statistic .n-statistic__label) {
   text-align: end;
   color: #b1b2bb;
-  font-size: 12px;
+  font-size: 16px;
 }
 
 :deep(.n-statistic .n-statistic-value) {
@@ -324,7 +324,7 @@ watch(
 
 :deep(.n-statistic .n-statistic-value__content) {
   color: #5486f3;
-  font-size: 56px;
+  font-size: 86px;
   font-weight: 600;
   font-family: electronicFont;
 }
@@ -335,7 +335,7 @@ watch(
 }
 
 :deep(.onoff .n-statistic .n-statistic-value__content) {
-  font-size: 36px;
+  font-size: 56px;
   color: #18a058;
 }
 

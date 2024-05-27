@@ -38,7 +38,7 @@ console.log('props', props.data)
         <div v-for="item in data">
           <div :class="['responseTimeBox', item.status === '1' ? 'responseTimeBox2' : '']">
             <span class="picon" v-if="item.status !== '1'"></span>
-            <p style="font-size: 12px; margin-bottom: 0px">{{ item.appName }}</p>
+            <p style="font-size: 14px; margin-bottom: 0px">{{ item.appName }}</p>
             <p>
               <span class="responseTimeNum">{{ item.time }}</span>
               <span class="responseTimeMs">ms</span>
@@ -72,7 +72,7 @@ console.log('props', props.data)
   /* margin-top: 10px; */
   /* margin-right: 30px; */
   color: white;
-  font-size: 12px;
+  font-size: 16px;
 }
 
 .responseTimeTitle .end {
@@ -103,14 +103,14 @@ console.log('props', props.data)
 }
 
 .responseTimeBox {
-  width: 88px;
-  height: 50px;
+  width: 108px;
+  height: 65px;
   background-color: #002158;
   color: white;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding-left: 10px;
+  padding-left: 15px;
   border: 1px solid #0063bd;
   border-radius: 3px;
   position: relative;
@@ -126,8 +126,8 @@ console.log('props', props.data)
   display: inline-block;
   width: 0;
   height: 0;
-  border-top: 10px solid #008dff;
-  border-right: 10px solid transparent;
+  border-top: 15px solid #008dff;
+  border-right: 15px solid transparent;
   position: absolute;
   top: 0;
   left: 0;
@@ -135,7 +135,7 @@ console.log('props', props.data)
 }
 
 .responseTimeBox .responseTimeNum {
-  font-size: 16px;
+  font-size: 20px;
   font-weight: 700;
   padding-right: 5px;
 }

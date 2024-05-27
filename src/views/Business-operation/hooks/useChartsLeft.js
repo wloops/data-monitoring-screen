@@ -305,6 +305,7 @@ async function init3(wsMsg, dom) {
       itemHeight: 10,
       textStyle: {
         color: '#ffffff',
+        fontSize: 14,
       },
     },
     xAxis: {
@@ -320,7 +321,7 @@ async function init3(wsMsg, dom) {
       },
       axisLabel: {
         show: true,
-        fontSize: 10,
+        fontSize: 14,
         // textStyle: {
           color: '#fff', //X轴文字颜色
         // },
@@ -347,6 +348,7 @@ async function init3(wsMsg, dom) {
         },
         axisLabel: {
           show: true,
+          fontSize: 14,
           // textStyle: {
             color: '#fff',
           // },

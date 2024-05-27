@@ -124,9 +124,7 @@ async function init2(wsMsg, dom) {
         axisLabel: {
           margin: 10,
           color: '#e2e9ff',
-          // textStyle: {
-            fontSize: 12,
-          // },
+          fontSize: 14,
         },
       },
     ],
@@ -155,7 +153,7 @@ async function init2(wsMsg, dom) {
       {
         type: 'bar',
         data: data,
-        barWidth: '18px',
+        barWidth: '20px',
         itemStyle: {
           // normal: {
             color: new echarts.graphic.LinearGradient(
@@ -166,18 +164,18 @@ async function init2(wsMsg, dom) {
               [
                 {
                   offset: 0,
-                  color: 'rgba(0,244,255,0.7)', // 0% 处的颜色
+                  color: '#008CFF', // 0% 处的颜色
                 },
                 {
                   offset: 1,
-                  color: 'rgba(0,77,167,1)', // 100% 处的颜色
+                  color: '#008CFF', // 100% 处的颜色
                 },
               ],
               false
             ),
-            borderRadius: [30, 30, 30, 30],
+            borderRadius: [30, 30, 0, 0],
             shadowColor: 'rgba(0,160,221,1)',
-            shadowBlur: 2,
+            shadowBlur: 1,
           // },
         },
         label: {
@@ -185,10 +183,10 @@ async function init2(wsMsg, dom) {
             show: true,
             lineHeight: 30,
             width: 80,
-            height: 20,
+            height: 30,
             backgroundColor: 'rgba(0,160,221,0.1)',
             borderRadius: 200,
-            position: ['-13', '-60'],
+            position: ['-8', '-50'],
             distance: 1,
             formatter: ['    {d|●}', ' {a|{c}}     \n', '    {b|}'].join(','),
             rich: {
@@ -201,8 +199,8 @@ async function init2(wsMsg, dom) {
               },
               b: {
                 width: 1,
-                height: 20,
-                borderWidth: 1,
+                height: 15,
+                borderWidth: 0,
                 borderColor: '#234e6c',
                 align: 'left',
               },

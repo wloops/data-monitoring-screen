@@ -109,25 +109,28 @@ console.log('scroll:', scroll.value)
         <div class="tb-body">
           <div class="tb-body" :style="{
     height: tableConfig.height,
-    overflow: 'hidden',
+    overflow: auto,
     textAlign: tableConfig.align || 'left',
   }" :class="{ anim: animate }">
-            <div class="tb-list" v-for="(item, index) in props.tbData"
-              :class="{ 'tb-zebra1': !lineType, 'tb-zebra2': lineType }">
-              <div v-for="itemSon in tbHeader" :class="['tb-item', { 'item-flex': item.width }]"
-                :style="{ width: itemSon.width + '%', textAlign: tableConfig.align || 'left' }">
-                <template v-if="typeof item[itemSon.param] === 'string' && item[itemSon.param].indexOf('|') > -1
+            <n-scrollbar :style="{ 'max-height': tableConfig.height }">
+              <div class="tb-list" v-for="(item, index) in props.tbData"
+                :class="{ 'tb-zebra1': !lineType, 'tb-zebra2': lineType }">
+                <div v-for="itemSon in tbHeader" :class="['tb-item', { 'item-flex': item.width }]"
+                  :style="{ width: itemSon.width + '%', textAlign: tableConfig.align || 'left' }">
+                  <template v-if="typeof item[itemSon.param] === 'string' && item[itemSon.param].indexOf('|') > -1
     ">
-                  <n-badge dot v-if="item[itemSon.param].split('|')[1] === '0'" color="#0E6DB6" />
-                  <n-badge dot v-if="item[itemSon.param].split('|')[1] === '1'" color="#E69C68" />
-                  <n-badge dot v-if="item[itemSon.param].split('|')[1] === '2'" color="#D85C6D" />
-                  {{ item[itemSon.param].split('|')[0] }}
-                </template>
-                <template v-else>
-                  {{ item[itemSon.param] }}
-                </template>
+                    <n-badge dot v-if="item[itemSon.param].split('|')[1] === '0'" color="#0E6DB6" />
+                    <n-badge dot v-if="item[itemSon.param].split('|')[1] === '1'" color="#E69C68" />
+                    <n-badge dot v-if="item[itemSon.param].split('|')[1] === '2'" color="#D85C6D" />
+                    {{ item[itemSon.param].split('|')[0] }}
+                  </template>
+                  <template v-else>
+                    {{ item[itemSon.param] }}
+                  </template>
+                </div>
               </div>
-            </div>
+            </n-scrollbar>
+
           </div>
         </div>
       </div>
@@ -170,9 +173,9 @@ console.log('scroll:', scroll.value)
   width: 100%;
   background: rgba(0, 109, 198, 0.3);
   font-size: 14px;
-  height: 30px;
-  line-height: 30px;
-  margin-top: 45px;
+  height: 35px;
+  line-height: 35px;
+  margin-top: 35px;
   display: flex;
 }
 
@@ -183,7 +186,7 @@ console.log('scroll:', scroll.value)
   /* width: 1472px;
   height: 830px; */
   /* max-height: calc(32px * 5); */
-  overflow: hidden;
+  overflow-y: auto;
   position: relative;
 }
 
@@ -199,9 +202,9 @@ console.log('scroll:', scroll.value)
 .tb-list {
   /* width: 1472px; */
   width: 100%;
-  height: 30px;
-  line-height: 30px;
-  font-size: 14px;
+  height: 35px;
+  line-height: 35px;
+  font-size: 16px;
   display: flex;
   /* margin-bottom: 2px; */
 }
@@ -213,18 +216,18 @@ console.log('scroll:', scroll.value)
   overflow: hidden;
   text-overflow: ellipsis;
   /* white-space: nowrap; */
-  height: 30px;
+  height: 35px;
   color: #cee0f2;
   background: rgba(0, 109, 198, 0.08);
-  margin: 2px;
-  padding: 0 3px;
+  /* margin: 2px; */
+  padding: 0 10px;
 }
 
 .tb-header-item {
   background: rgba(0, 109, 198, 0.1);
   color: #00b2f8;
   /* flex: 1; */
-  padding: 0 3px;
+  padding: 0 10px;
 }
 
 /* .tb-zebra1 {
@@ -241,7 +244,7 @@ console.log('scroll:', scroll.value)
 
 .anim {
   transition: all 0.5s;
-  transform: translateY(-30px);
+  transform: translateY(-35px);
 }
 
 

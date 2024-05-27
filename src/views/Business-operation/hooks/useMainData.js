@@ -111,6 +111,7 @@ async function init201(wsMsg, dom) {
       itemWidth: 15,
       itemHeight: 10,
       textStyle: {
+        fontSize: 14,
         color: '#ffffff',
       },
     },
@@ -127,6 +128,7 @@ async function init201(wsMsg, dom) {
       },
       axisLabel: {
         show: true,
+        fontSize: 14,
         // textStyle: {
           color: '#fff', //X轴文字颜色
         // },
@@ -153,6 +155,7 @@ async function init201(wsMsg, dom) {
         },
         axisLabel: {
           show: true,
+          fontSize: 16,
           // textStyle: {
             color: '#fff',
           // },
@@ -457,17 +460,17 @@ async function init202(wsMsg, dom) {
       textStyle: {
         rich: {
           title: {
-            fontSize: 10,
+            fontSize: 14,
             lineHeight: 10,
             color: '#CAD0DF',
           },
           value: {
-            fontSize: 14,
+            fontSize: 16,
             lineHeight: 18,
             color: '#009DFF',
           },
           value2: {
-            fontSize: 14,
+            fontSize: 16,
             lineHeight: 18,
             color: '#FF8700',
           },

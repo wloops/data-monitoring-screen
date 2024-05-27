@@ -95,6 +95,7 @@ async function init1(wsMsg, dom) {
       itemWidth: 15,
       itemHeight: 10,
       textStyle: {
+        fontSize: 16,
         color: '#ffffff',
       },
     },
@@ -111,9 +112,8 @@ async function init1(wsMsg, dom) {
       },
       axisLabel: {
         show: true,
-        // textStyle: {
+        fontSize: 16,
           color: '#fff', //X轴文字颜色
-        // },
       },
     },
     yAxis: [
@@ -320,6 +320,7 @@ async function init2(wsMsg, dom) {
       itemWidth: 15,
       itemHeight: 10,
       textStyle: {
+        fontSize: 16,
         color: '#ffffff',
       },
     },
@@ -336,9 +337,8 @@ async function init2(wsMsg, dom) {
       },
       axisLabel: {
         show: true,
-        // textStyle: {
-          color: '#fff', //X轴文字颜色
-        // },
+        fontSize: 16,
+        color: '#fff', //X轴文字颜色
       },
     },
     yAxis: [

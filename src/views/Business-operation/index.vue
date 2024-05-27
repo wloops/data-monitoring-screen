@@ -394,7 +394,7 @@ watch(
   top: 0px;
   left: 25%;
   width: 50%;
-  height: 25px;
+  height: 30px;
   background: rgba(64, 121, 226, 0.26);
   display: flex;
   justify-content: center;
@@ -402,7 +402,7 @@ watch(
   padding: 0 30px;
   border-radius: 0 0 20px 20px;
   color: #ffffffc7;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 550;
   letter-spacing: 1px;
   clip-path: polygon(1px 0, 20px 100%, calc(100% - 20px) 100%, calc(100% - 1px) 0);
@@ -437,18 +437,18 @@ watch(
 
 :deep(.n-statistic .n-statistic-value__content) {
   color: #5486f3;
-  font-size: 56px;
+  font-size: 86px;
   font-weight: 600;
   font-family: electronicFont;
 }
 
-:deep(.n-statistic .n-statistic-value__suffi)x {
+:deep(.n-statistic .n-statistic-value__suffix) {
   color: #0586bd;
-  font-size: small;
+  font-size: 16px;
 }
 
 :deep(.onoff .n-statistic .n-statistic-value__content) {
-  font-size: 36px;
+  font-size: 56px;
   color: #18a058;
 }
 

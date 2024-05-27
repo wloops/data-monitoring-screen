@@ -220,7 +220,7 @@ async function init2(wsMsg, dom) {
             },
             detail: {
               // textStyle: {
-                fontSize: 16,
+                fontSize: 20,
                 color: 'inherit',
               // },
               show: true,
@@ -228,7 +228,7 @@ async function init2(wsMsg, dom) {
               formatter: ['{value} ' + (item.unit || ''), '{name|' + item.name + '}'].join('\n'),
               rich: {
                 name: {
-                  fontSize: 12,
+                  fontSize: 16,
                   lineHeight: 15,
                   color: '#ddd',
                 },
@@ -332,9 +332,8 @@ async function init301(wsMsg, dom) {
           formatter: '{value}',
           fontSize: 14,
           margin: 20,
-          // textStyle: {
-            color: '#7ec7ff',
-          // },
+          color: '#7ec7ff',
+          fontSize: 16,
         },
         axisLine: {
           lineStyle: {
@@ -543,6 +542,7 @@ async function init302(wsMsg, dom) {
       itemWidth: 6,
       itemGap: 20,
       textStyle: {
+        fontSize: 14,
         color: '#fff',
       },
       data: ['', '未及格'],
@@ -599,7 +599,7 @@ async function init302(wsMsg, dom) {
             color: '#7AC1FA',
           // },
           // 默认x轴字体大小
-          fontSize: 12,
+          fontSize: 16,
           // margin:文字到x轴的距离
           margin: 15,
         },

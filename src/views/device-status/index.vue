@@ -145,24 +145,24 @@ watch(
           <div data-text="设备详情" style="" class="glass card-1">
             <div class="card-1-column device-info" v-if="deviceInfoShow">
               <p>
-                <span c-bluegray>设备名称：</span>
-                <span>{{ deviceInfoShow.name }}</span>
+                <span c-bluegray text-16>设备名称：</span>
+                <span text-16>{{ deviceInfoShow.name }}</span>
               </p>
               <p>
-                <span c-bluegray>所属部门：</span>
-                <span>{{ deviceInfoShow.unit }}</span>
+                <span c-bluegray text-16>所属部门：</span>
+                <span text-16>{{ deviceInfoShow.unit }}</span>
               </p>
               <p>
-                <span c-bluegray>序列号：</span>
-                <span>{{ deviceInfoShow.id }}</span>
+                <span c-bluegray text-16>序列号：</span>
+                <span text-16>{{ deviceInfoShow.id }}</span>
               </p>
               <p>
-                <span c-bluegray>IP地址：</span>
-                <span>{{ deviceInfoShow.ip }}</span>
+                <span c-bluegray text-16>IP地址：</span>
+                <span text-16>{{ deviceInfoShow.ip }}</span>
               </p>
               <p>
-                <span c-bluegray>系统版本：</span>
-                <span>{{ deviceInfoShow.version }}</span>
+                <span c-bluegray text-16>系统版本：</span>
+                <span text-16>{{ deviceInfoShow.version }}</span>
               </p>
             </div>
             <div class="card-1-column device-status">
@@ -299,6 +299,7 @@ watch(
   align-items: center;
   margin: 15px 0;
   color: #d0d0d6;
+  font-size: 16px;
 }
 
 .container .glass {
@@ -343,7 +344,7 @@ watch(
   padding: 0 20px;
   border-radius: 10px 10px 0 0;
   color: #fff;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 500;
   letter-spacing: 1px;
 }
@@ -362,7 +363,7 @@ watch(
   padding: 0 20px;
   border-radius: 10px 10px 0 0;
   color: #fff;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 500;
   letter-spacing: 1px;
 }
@@ -397,7 +398,7 @@ watch(
     height: 100%;
 
     .status-box {
-      margin-right: 20px;
+      margin: 60px 0 20px;
     }
   }
 }
@@ -430,7 +431,7 @@ watch(
 :deep(.n-statistic .n-statistic__label) {
   text-align: end;
   color: #b1b2bb;
-  font-size: 12px;
+  font-size: 14px;
   margin-right: 10px;
 }
 
@@ -440,7 +441,7 @@ watch(
 
 :deep(.n-statistic .n-statistic-value__content) {
   color: #00cae6;
-  font-size: 26px;
+  font-size: 32px;
   font-weight: 600;
   font-family: electronicFont;
 }

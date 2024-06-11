@@ -31,7 +31,7 @@ onMounted(() => {
   const scrollBox = document.querySelector('.seamlessScroll')
   if (parentElement) {
     const width = parentElement.offsetWidth
-    const height = parentElement.offsetHeight - 80
+    const height = parentElement.offsetHeight - 70
     console.log('width:', width, 'height:', height)
     scrollBox.style.width = 100 + '%'
     scrollBox.style.height = height + 'px'
@@ -109,7 +109,7 @@ console.log('scroll:', scroll.value)
         <div class="tb-body">
           <div class="tb-body" :style="{
     height: tableConfig.height,
-    overflow: auto,
+    overflowY: scroll,
     textAlign: tableConfig.align || 'left',
   }" :class="{ anim: animate }">
             <n-scrollbar :style="{ 'max-height': tableConfig.height }">
@@ -171,7 +171,7 @@ console.log('scroll:', scroll.value)
 .tb-header {
   /* width: 1472px; */
   width: 100%;
-  background: rgba(0, 109, 198, 0.3);
+  background: rgba(0, 109, 198, 0.15);
   font-size: 14px;
   height: 35px;
   line-height: 35px;
@@ -204,7 +204,7 @@ console.log('scroll:', scroll.value)
   width: 100%;
   height: 35px;
   line-height: 35px;
-  font-size: 16px;
+  font-size: 14px;
   display: flex;
   /* margin-bottom: 2px; */
 }
@@ -225,7 +225,7 @@ console.log('scroll:', scroll.value)
 
 .tb-header-item {
   background: rgba(0, 109, 198, 0.1);
-  color: #00b2f8;
+  color: #4DA7F0;
   /* flex: 1; */
   padding: 0 10px;
 }

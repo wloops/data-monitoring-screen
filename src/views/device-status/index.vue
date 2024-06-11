@@ -3,7 +3,6 @@ import { useChartsLeft, useChartsRight } from './hooks'
 import { useSetUpdatedDom } from '@/hooks/useSetUpdatedDom'
 const { leftChart, deviceMessage } = useChartsLeft()
 const { rightChart, numberAnimation } = useChartsRight()
-
 const props = defineProps({
   parentData: {
     type: Object,
@@ -138,34 +137,34 @@ watch(
 </script>
 
 <template>
-  <div overflow-x-hidden>
+  <div overflow-x-hidden overflow-y-auto>
     <div class="cardBox">
       <div class="column">
         <div class="container">
           <div data-text="设备详情" style="" class="glass card-1">
-            <div class="card-1-column device-info" v-if="deviceInfoShow">
+            <div class="card-1-column device-info inlineBlock mt-20" v-if="deviceInfoShow">
               <p>
-                <span c-bluegray text-16>设备名称：</span>
-                <span text-16>{{ deviceInfoShow.name }}</span>
+                <span c-bluegray text-14>设备名称：</span>
+                <span text-14>{{ deviceInfoShow.name }}</span>
               </p>
               <p>
-                <span c-bluegray text-16>所属部门：</span>
-                <span text-16>{{ deviceInfoShow.unit }}</span>
+                <span c-bluegray text-14>所属部门：</span>
+                <span text-14>{{ deviceInfoShow.unit }}</span>
               </p>
               <p>
-                <span c-bluegray text-16>序列号：</span>
-                <span text-16>{{ deviceInfoShow.id }}</span>
+                <span c-bluegray text-14>序列号：</span>
+                <span text-14>{{ deviceInfoShow.id }}</span>
               </p>
               <p>
-                <span c-bluegray text-16>IP地址：</span>
-                <span text-16>{{ deviceInfoShow.ip }}</span>
+                <span c-bluegray text-14>IP地址：</span>
+                <span text-14>{{ deviceInfoShow.ip }}</span>
               </p>
               <p>
-                <span c-bluegray text-16>系统版本：</span>
-                <span text-16>{{ deviceInfoShow.version }}</span>
+                <span c-bluegray text-14>系统版本：</span>
+                <span text-14>{{ deviceInfoShow.version }}</span>
               </p>
             </div>
-            <div class="card-1-column device-status">
+            <div class="card-1-column device-status inlineBlock">
               <div class="status-box status-1">
                 <CustomIcon icon="server" :size="80" type="custom"></CustomIcon>
                 <div class="status-text">
@@ -227,21 +226,21 @@ watch(
         </div>
         <div class="container">
           <div data-text="设备硬件状态" style="" class="glass">
-            <div class="chart" ref="chartLeft2"></div>
+            <div class="chart inlineBlock" ref="chartLeft2"></div>
           </div>
         </div>
         <div class="container">
           <div data-text="设备运行TOP趋势" data-text-2="设备健康趋势" style="" class="glass">
-            <div flex justify-between w-full>
-              <div class="chart" ref="chartLeft301"></div>
-              <div class="chart" ref="chartLeft302"></div>
+            <div flex justify-between w-full flex-1>
+              <div class="chart inlineBlock" ref="chartLeft301"></div>
+              <div class="chart inlineBlock" ref="chartLeft302"></div>
             </div>
           </div>
         </div>
       </div>
       <div class="column">
         <div class="container">
-          <div data-text="证书签发数量统计趋势" class="glass" flex w-full>
+          <div data-text="证书签发数量统计趋势" class="glass inlineBlock" flex w-full>
             <div class="chart" ref="rightChart1" style="flex: 3"></div>
             <div class="numberShow" style="flex: 1" w-full>
               <n-statistic label="已签发证书数量" tabular-nums mt-30 mb-20>
@@ -258,12 +257,12 @@ watch(
           </div>
         </div>
         <div class="container">
-          <div data-text="证书签发成功失败统计" style="" class="glass">
+          <div data-text="证书签发成功失败统计" style="" class="glass inlineBlock">
             <div class="chart" ref="rightChart2"></div>
           </div>
         </div>
         <div class="container">
-          <div data-text="设备告警信息" style="" class="glass">
+          <div data-text="设备告警信息" style="" class="glass inlineBlock">
             <div class="chart DStableWrap">
               <app-table style="margin-top: -10px" ref="rightChart3" :tb-data="alarmData.data"
                 :tb-header="alarmData.header" :table-config="tableConfig"></app-table>
@@ -280,7 +279,7 @@ watch(
   border: 10px double #00357a;
   border-radius: 18px;
   margin: 20px;
-  height: 100vh;
+  height: 100%;
   display: flex;
 }
 
@@ -300,12 +299,13 @@ watch(
   margin: 15px 0;
   color: #d0d0d6;
   font-size: 16px;
+  flex: 1;
 }
 
 .container .glass {
   position: relative;
   width: 95%;
-  height: 30vh;
+  height: 26vh;
   background: transparent;
   border: 1px solid rgba(2, 24, 68, 0.1);
   box-shadow: 0 25px 25px rgba(0, 0, 0, 0.25);
@@ -315,13 +315,13 @@ watch(
   transition: 0.5s;
   border-radius: 10px;
   padding-bottom: 15px;
-  margin: 0 -45px;
+  /* margin: 40px 0 0 0; */
   /* backdrop-filter: blur(10px); */
   transform: rotate(calc(var(--r) * 1deg));
 
   .chart {
     width: 100%;
-    height: calc(30vh - 40px);
+    height: calc(26vh - 40px);
   }
 }
 
@@ -381,11 +381,11 @@ watch(
 
   .device-info {
     font-size: 12px;
-    margin: 10px;
-    margin-top: 50px;
+    margin: 0 15px;
+    /* margin-top: 50px; */
 
     p {
-      padding: 8px;
+      padding: 5px;
     }
   }
 

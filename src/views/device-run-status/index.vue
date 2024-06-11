@@ -188,7 +188,7 @@ watch(
 
 .column {
   flex: 2;
-  height: 100vh;
+  height: 90vh;
   /* border: 5px double #00357a; */
   display: flex;
   flex-direction: column;
@@ -208,12 +208,13 @@ watch(
     left: 25%;
     width: 50%;
     height: 30px;
-    background: rgba(64, 121, 226, 0.35);
+    /* background: rgba(64, 121, 226, 0.35); */
+    background: rgba(255, 255, 255, 0.1);
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 0 30px;
-    border-radius: 0 0 20px 20px;
+    border-radius: 0 0 50px 50px;
     color: #ffffffc7;
     font-size: 16px;
     font-weight: 550;
@@ -324,7 +325,7 @@ watch(
 
 :deep(.n-statistic .n-statistic-value__content) {
   color: #5486f3;
-  font-size: 86px;
+  font-size: 76px;
   font-weight: 600;
   font-family: electronicFont;
 }
@@ -335,7 +336,7 @@ watch(
 }
 
 :deep(.onoff .n-statistic .n-statistic-value__content) {
-  font-size: 56px;
+  font-size: 46px;
   color: #18a058;
 }
 

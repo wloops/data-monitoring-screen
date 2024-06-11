@@ -139,7 +139,7 @@ const progressColor = (percent) => {
         .dervice-info-item-title {
           font-size: 14px;
           font-weight: 500;
-          color: #ffffffc7;
+          color: #869ba0;
           margin-right: 10px;
           text-align: left;
         }

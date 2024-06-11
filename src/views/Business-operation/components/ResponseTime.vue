@@ -22,7 +22,7 @@ console.log('props', props.data)
 </script>
 
 <template>
-  <div p-30 flex justify-center align-center>
+  <div pt-0 h-full flex justify-center align-center>
     <div class="responseTime">
       <div class="responseTimeTitle">
         <span style="margin-right: 5px">
@@ -38,7 +38,7 @@ console.log('props', props.data)
         <div v-for="item in data">
           <div :class="['responseTimeBox', item.status === '1' ? 'responseTimeBox2' : '']">
             <span class="picon" v-if="item.status !== '1'"></span>
-            <p style="font-size: 14px; margin-bottom: 0px">{{ item.appName }}</p>
+            <p style="font-size: 12px; margin-bottom: 0px">{{ item.appName }}</p>
             <p>
               <span class="responseTimeNum">{{ item.time }}</span>
               <span class="responseTimeMs">ms</span>
@@ -59,8 +59,8 @@ console.log('props', props.data)
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  padding-top: 1rem;
-  overflow: hidden;
+  /* padding-top: 0.3rem; */
+  /* overflow: hidden; */
 }
 
 .responseTimeTitle {
@@ -97,14 +97,14 @@ console.log('props', props.data)
   justify-content: center;
   flex-wrap: wrap;
   justify-items: center;
-  margin-top: 30px;
+  margin-top: 10px;
   /* margin-right: 10px; */
   overflow: hidden;
 }
 
 .responseTimeBox {
-  width: 108px;
-  height: 65px;
+  width: 90px;
+  height: 50px;
   background-color: #002158;
   color: white;
   display: flex;
@@ -114,7 +114,7 @@ console.log('props', props.data)
   border: 1px solid #0063bd;
   border-radius: 3px;
   position: relative;
-  margin: 5px;
+  margin: 3px;
 }
 
 .responseTimeBox2 {
@@ -135,13 +135,13 @@ console.log('props', props.data)
 }
 
 .responseTimeBox .responseTimeNum {
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 700;
   padding-right: 5px;
 }
 
 .responseTimeBox .responseTimeMs {
-  font-size: 10px;
+  font-size: 12px;
   padding: 0 2px;
 }
 </style>

@@ -1,13 +1,56 @@
 <script setup>
 import autofit from 'autofit.js'
 
+/**
+ * 大屏效果需要满足16:9的屏幕比例，才能达到完美的大屏适配效果
+ * 其他比例的大屏效果，不能铺满整个屏幕
+ * @param {*} w 设备宽度 默认 1920 
+ * @param {*} h 设备高度 默认 1080
+ * @returns 返回值是缩放比例
+ */
+function getScale(w = 1920, h = 1080) {
+  const ww = window.innerWidth / w
+  const wh = window.innerHeight / h
+  return ww < wh ? ww : wh
+}
+
+
 onMounted(() => {
-  autofit.init({
-    dh: 1080,
-    dw: 1920,
-    el: '#main',
-    resize: true,
-  })
+  // autofit.init({
+  //   dh: 1080,
+  //   dw: 1920,
+  //   // scale: 1.2,
+  //   // width: "80%",
+  //   // height: "100%",
+  //   el: '#main',
+  //   resize: true,
+  // })
+  // setFullScreen() {
+  // const screenNode = document.getElementById("screen");
+  // // 非标准设备（笔记本小于1920，如：1366*768、mac 1432*896）
+  // if (window.innerWidth < 1920) {
+  //   screenNode.style.left = "50%";
+  //   screenNode.style.transform = `scale(${getScale()}) translate(-50%, 0)`;
+  // } else if (window.innerWidth === 1920) {
+  //   // 标准设备 1920 * 1080
+  //   screenNode.style.left = 0;
+  //   screenNode.style.transform = `scale(1) translate(0, 0)`;
+  // } else {
+  //   // 大屏设备（4K 2560*1600）
+  //   screenNode.style.left = "50%";
+  //   screenNode.style.transform = `scale(${getScale()}) translate(-50%, 0)`;
+  // }
+  // // 监听视口变化
+  // window.addEventListener("resize", () => {
+  //   if (window.innerWidth === 1920) {
+  //     screenNode.style.left = 0;
+  //     screenNode.style.transform = `scale(1) translate(0, 0)`;
+  //   } else {
+  //     screenNode.style.left = "50%";
+  //     screenNode.style.transform = `scale(${getScale()}) translate(-50%, 0)`;
+  //   }
+  // });
+  // }
 })
 import gsap from 'gsap'
 import BusinessOperation from '@/views/Business-operation/index.vue'
@@ -46,7 +89,7 @@ onMounted(() => {
         load.remove()
       },
     })
-  }, 2000)
+  }, 1000)
 })
 const { updateInlineData } = useUpdateInline()
 
@@ -79,35 +122,43 @@ function refreshComponent() {
 </script>
 
 <template>
-  <div id="load">
-    <div class="load_img">
-      <!-- 加载动画 -->
-      <img class="jzxz1" src="./images/jzxz1.png" />
-      <img class="jzxz2" src="./images/jzxz2.png" />
-    </div>
-  </div>
+  <div style="height: 100vh; overflow: hidden">
 
-  <div class="main" id="main">
-    <div style="width: 100%; position: absolute; top: 10%; left: 0">
-      <div class="map">
-        <div class="map1"></div>
-        <!-- 地图模块 -->
-        <div class="map2"></div>
-        <div class="map3"></div>
+    <div id="load">
+      <div class="load_img">
+        <!-- 加载动画 -->
+        <img class="jzxz1" src="./images/jzxz1.png" />
+        <img class="jzxz2" src="./images/jzxz2.png" />
       </div>
     </div>
-    <div>
 
-      <!-- 头部的盒子 -->
-      <div id="headerBox" z-2000>
-        <Header-component @selectTab="currentTab = $event" :currentTab="currentTab"
-          @refreshComponent="refreshComponent" />
+    <div class="main" id="main">
+      <div style="width: 100%; position: absolute; top: 10%; left: 0">
+        <div class="map">
+          <div class="map1"></div>
+          <!-- 地图模块 -->
+          <div class="map2"></div>
+          <div class="map3"></div>
+        </div>
       </div>
 
-      <!-- 页面主体部分 -->
-      <section class="mainbox" id="mainbox">
-        <component :is="tabs[currentTab]" :parentData="parentData" :key="componentKey"></component>
-      </section>
+      <div class="full-screen-container">
+        <div id="screen">
+          <!-- 大屏展示的内容 -->
+          <!-- 头部的盒子 -->
+          <div id="headerBox" z-2000>
+            <Header-component @selectTab="currentTab = $event" :currentTab="currentTab"
+              @refreshComponent="refreshComponent" />
+          </div>
+
+          <!-- 页面主体部分 -->
+          <section class="mainbox" id="mainbox">
+            <component :is="tabs[currentTab]" :parentData="parentData" :key="componentKey"
+              @refreshComponent="refreshComponent"></component>
+          </section>
+        </div>
+      </div>
+
     </div>
   </div>
 </template>

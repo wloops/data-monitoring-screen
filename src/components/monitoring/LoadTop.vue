@@ -32,20 +32,20 @@ const progressColor = (percent) => {
 </script>
 
 <template>
-  <div w-full h-full p-30 flex justify-center items-center>
+  <div w-full h-full p-10 flex justify-center items-center>
     <div class="loadBox" w-full h-full c-coolgray-300 p-20 pt-40>
       <div class="load-info-box" h-full flex flex-col justify-center items-center>
         <div class="load-info-item" flex-1 w-full flex justify-between items-center
           v-for="item in getSortedData(props.data)" :key="item.name">
           <div class="load-info-item-title w-1/3 text-16">{{ item.name }}</div>
           <div class="load-info-item-content w-2/3 flex justify-between items-center">
-            <div class="progress-box mr-20">
+            <div class="progress-box mr-10">
               <n-progress type="line" :color="progressColor(item.percent)" rail-color="#003663"
                 :percentage="item.percent" indicator-text-color="#ffffffc7" :show-indicator="false"
-                :height="16"></n-progress>
+                :height="12"></n-progress>
             </div>
             <div>
-              <span text-14 w-full>
+              <span text-14 w-full :style="{ color: progressColor(item.percent) }">
                 {{ unit !== '%' ? item.number + unit : item.percent + unit }}
               </span>
             </div>

@@ -344,8 +344,8 @@ async function init202(wsMsg, dom) {
         name: '交易占比',
         type: 'pie',
         clockwise: false, //顺时加载
-        radius: [65 - i * 15 + '%', 57 - i * 15 + '%'],
-        center: ['50%', '45%'],
+        radius: [55 - i * 15 + '%', 47 - i * 15 + '%'],
+        center: ['50%', '40%'],
         emphasis:{
           scale: false, //鼠标移入变大
         },
@@ -386,8 +386,8 @@ async function init202(wsMsg, dom) {
         silent: true,
         z: 1,
         clockwise: false, //顺时加载
-        radius: [65 - i * 15 + '%', 57 - i * 15 + '%'],
-        center: ['50%', '45%'],
+        radius: [55 - i * 15 + '%', 47 - i * 15 + '%'],
+        center: ['50%', '40%'],
         emphasis:{
           scale: false, //鼠标移入变大
         },
@@ -465,12 +465,12 @@ async function init202(wsMsg, dom) {
             color: '#CAD0DF',
           },
           value: {
-            fontSize: 16,
+            fontSize: 14,
             lineHeight: 18,
             color: '#009DFF',
           },
           value2: {
-            fontSize: 16,
+            fontSize: 14,
             lineHeight: 18,
             color: '#FF8700',
           },
